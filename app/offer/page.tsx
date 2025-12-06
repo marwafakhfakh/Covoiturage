@@ -5,6 +5,7 @@ import SuccessMessage from "../../components/common/SuccessMessage";
 import api from "../../api/api";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store";
+import DelegationMap from "./DelegationMap";
 
 // Car and Service types
 type Car = {
@@ -50,28 +51,36 @@ export default function OfferRidePage() {
   const [delegations, setDelegations] = useState<
     { id: number; name: string }[]
   >([]);
+useEffect(() => {
+  async function fetchData() {
+    setLoading(true);
+    try {
+      
+      const [carsRes, servicesRes, delegationsRes] = await Promise.all([
+        api.get("/api/cars/"),
+        api.get("/api/services/"),
+        api.get("/api/delegations/"),
+      ]);
+      
+      
+      // Gérer les deux cas : avec et sans pagination
+      const cars = Array.isArray(carsRes.data) 
+        ? carsRes.data 
+        : (carsRes.data.results || []);
+            const delegs = delegationsRes.data.results || delegationsRes.data || [];
 
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      try {
-        const [carsRes, servicesRes, delegationsRes] = await Promise.all([
-          api.get("/api/cars/"),
-          api.get("/api/services/"),
-          api.get("/api/delegations/"),
-        ]);
-        setOwnedCars(carsRes.data.results || []);
-        setServices(servicesRes.data.results || []);
-        setDelegations(delegationsRes.data.results || []);
-      } catch {
-        // Optionally handle error
-      } finally {
-        setLoading(false);
-      }
+            console.log('Delegations fetched:', delegs);
+
+      setOwnedCars(cars);
+      setServices(servicesRes.data.results || []);
+      setDelegations(delegs);
+    } catch (error) {
+    } finally {
+      setLoading(false);
     }
-    fetchData();
-  }, []);
-
+  }
+  fetchData();
+}, [user]);
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -152,7 +161,7 @@ export default function OfferRidePage() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Route Section */}
-              <FormSection title="Route Information">
+              {/* <FormSection title="Route Information">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="block text-sm font-semibold text-gray-700">
@@ -204,8 +213,24 @@ export default function OfferRidePage() {
                     </div>
                   </div>
                 </div>
-              </FormSection>
+              </FormSection> */}
+<FormSection title="Route Information">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <DelegationMap
+      selectedValue={form.departure_place}
+      onSelect={(value) => setForm({ ...form, departure_place: value })}
+      label="Lieu de départ"
+      delegations={delegations}
+    />
 
+    <DelegationMap
+      selectedValue={form.arrival_place}
+      onSelect={(value) => setForm({ ...form, arrival_place: value })}
+      label="Lieu d'arrivée"
+      delegations={delegations}
+    />
+  </div>
+</FormSection>
               {/* Trip Details Section */}
               <FormSection title="Trip Details">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -281,25 +306,26 @@ export default function OfferRidePage() {
                       Select Your Car
                     </label>
                     <select
-                      name="selected_car_id"
-                      value={form.selected_car_id}
-                      className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent transition bg-white"
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value="">
-                        Choose a car from your collection
-                      </option>
-                      {ownedCars.map((car) => (
-                        <option key={car.id} value={car.id.toString()}>
-                          {car.model?.name} ({car.year || "-"}) - {car.color} -{" "}
-                          {car.serial_number}
-                        </option>
-                      ))}
-                    </select>
+  name="selected_car_id"
+  value={form.selected_car_id}
+  className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent transition bg-white"
+  onChange={handleChange}
+  required
+>
+  <option value="">
+    Choose a car from your collection
+  </option>
+  {ownedCars.map((car) => {
+    return (
+      <option key={car.id} value={car.id.toString()}>
+        {car.model?.name || 'Unknown Model'} ({car.year || "-"}) - {car.color} - {car.serial_number}
+      </option>
+    );
+  })}
+</select>
                   </div>
 
-                  {ownedCars.length === 0 && (
+                  {ownedCars.length !== 0 && (
                     <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 text-center">
                       <div className="text-gray-400 text-4xl mb-3">🚗</div>
                       <h3 className="font-semibold text-gray-900 mb-2">
