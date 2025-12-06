@@ -46,35 +46,35 @@ export default function AddCarModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Log form data before sending
+  
     console.log("Car form data:", formData);
-
-    // Prepare form data for API (backend expects specific keys)
+  
     const data = new FormData();
-    data.append("model", formData.model); // should be an ID, default 1
+    data.append("model", formData.model);                 // ex: "1"
     data.append("type", formData.type);
     data.append("color", formData.color);
     data.append("serial_number", formData.serialNumber);
     data.append("nb_place", String(formData.seats));
     data.append("engine_type", formData.engineType);
     data.append("grey_card", formData.greyCard);
-    data.append("year", formData.year ? String(formData.year) : "");
-    if (formData.image) {
-      data.append("image", formData.image);
-    }
-
+    data.append("year", String(formData.year));
+    if (formData.image) data.append("image", formData.image);
+  
     try {
-      await api.post("/api/cars/", data, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await api.post("/api/cars/", data);     // ne PAS mettre headers ici
+      console.log("Car created:", res.data);
       onSubmit(formData);
       handleClose();
-    } catch {
-      alert("Error creating car. Please try again.");
+    } catch (err: any) {
+      console.error("Error creating car:", err.response?.data || err);
+      alert(
+        err.response?.data
+          ? JSON.stringify(err.response.data)
+          : "Error creating car. Please try again."
+      );
     }
   };
-
+  
   const handleClose = () => {
     setFormData({
       model: "1",

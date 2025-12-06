@@ -14,6 +14,19 @@ interface RootState {
   user: UserState;
 }
 
+// Même shape que dans AddCarModal
+interface CarFormData {
+  model: string;
+  type: string;
+  color: string;
+  serialNumber: string;
+  seats: number;
+  engineType: string;
+  greyCard: string;
+  year: number;
+  image: File | null;
+}
+
 export default function ProfilePage() {
   const user = useSelector((state: RootState) => state.user.user);
   const [ownedCars, setOwnedCars] = useState<Car[]>([]);
@@ -21,6 +34,7 @@ export default function ProfilePage() {
   const [offeredRides, setOfferedRides] = useState<any[]>([]);
   const [reservations, setReservations] = useState<any[]>([]);
 
+  // Réservations
   useEffect(() => {
     async function fetchReservations() {
       try {
@@ -51,6 +65,7 @@ export default function ProfilePage() {
     fetchReservations();
   }, []);
 
+  // Trajets offerts
   useEffect(() => {
     async function fetchOfferedRides() {
       try {
@@ -74,6 +89,7 @@ export default function ProfilePage() {
     fetchOfferedRides();
   }, []);
 
+  // Voitures possédées
   useEffect(() => {
     async function fetchCars() {
       try {
@@ -81,7 +97,7 @@ export default function ProfilePage() {
         const data = Array.isArray(res.data) ? res.data : [];
         const cars: Car[] = data.map((item: any) => ({
           id: item.id,
-          brand: "", // You may want to fetch brand/model names separately if needed
+          brand: "", // à compléter si ton API renvoie la marque
           model: item.model?.toString() || "",
           year: item.year ?? "",
           color: item.color || "",
@@ -98,20 +114,69 @@ export default function ProfilePage() {
     fetchCars();
   }, []);
 
-  const handleAddCar = (carData: Omit<Car, "id">) => {
+  // ✅ Création de voiture côté backend + MAJ state
+  const handleAddCar = async (formData: CarFormData) => {
+    if (!user?.id) {
+      alert("Utilisateur non connecté.");
+      return;
+    }
+  
+    try {
+      const data = new FormData();
+      
+      data.append("model", formData.model);                 // ID du Model (ex: "1")
+    data.append("type", formData.type);                  // ex: "SUV"
+    data.append("color", formData.color);                // ex: "Silver"
+    data.append("serial_number", formData.serialNumber.toUpperCase());
+    data.append("nb_place", String(formData.seats));     // champ nb_place en DB
+    data.append("engine_type", formData.engineType);     // ex: "Electric"
+    data.append("grey_card", formData.greyCard || "");
+    data.append("year", String(formData.year));          // ex: "2025"
+    if (formData.image) data.append("image", formData.image);
+
+    console.log("🚗 FormData envoyée:");
+    for (const [k, v] of data.entries()) console.log(k, v);
+
+    const res = await api.post("/api/cars/", data);
+
     const newCar: Car = {
-      ...carData,
-      id: Math.max(...ownedCars.map((car) => car.id), 0) + 1,
+      id: res.data.id,
+      brand: "", // à remplir si l’API renvoie la marque
+      model: formData.model,
+      year: formData.year,
+      color: formData.color,
+      seats: formData.seats,
+      fuelType: formData.engineType,
+      licensePlate: formData.serialNumber.toUpperCase(),
+      image: res.data.image || "",
     };
-    setOwnedCars([...ownedCars, newCar]);
-  };
+
+    setOwnedCars(prev => [...prev, newCar]);
+    setIsModalOpen(false);
+    alert("✅ Voiture ajoutée !");
+  } catch (err: any) {
+    console.error("❌ ERROR /api/cars/:", err.response?.data || err);
+
+    if (err.response?.data) {
+      const errors = err.response.data as Record<string, any>;
+      let msg = "Erreurs:\n";
+      for (const [field, error] of Object.entries(errors)) {
+        msg += `${field}: ${Array.isArray(error) ? error[0] : error}\n`;
+      }
+      alert(msg);
+    } else {
+      alert("Erreur serveur 500 lors de la création de la voiture.");
+    }
+  }
+};
+  
 
   const handleEditCar = (car: Car) => {
     console.log("Edit car:", car);
   };
 
   const handleRemoveCar = (carId: number) => {
-    setOwnedCars(ownedCars.filter((car) => car.id !== carId));
+    setOwnedCars((prev) => prev.filter((car) => car.id !== carId));
   };
 
   const handleCancelReservation = async (tripId: number) => {
@@ -122,7 +187,6 @@ export default function ProfilePage() {
       );
     } catch (err) {
       console.error("Failed to cancel reservation", err);
-      // Optionally show an error message to the user
     }
   };
 
@@ -134,7 +198,6 @@ export default function ProfilePage() {
       );
     } catch (err) {
       console.error("Failed to cancel offered ride", err);
-      // Optionally show an error message to the user
     }
   };
 

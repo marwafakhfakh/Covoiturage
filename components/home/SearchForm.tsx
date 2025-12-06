@@ -1,5 +1,7 @@
 "use client";
+
 import { useState, useEffect } from "react";
+import LeafletPlaceInput from "../common/LeafletPlaceInput";
 
 interface SearchFormData {
   from: string;
@@ -46,7 +48,7 @@ export default function SearchForm({
         seats: initialData.seats || "1",
       }));
     }
-  }, [initialData]);
+  }, [initialData, searchForm]);
 
   const handleSearchChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -60,7 +62,6 @@ export default function SearchForm({
     if (onSearch) {
       onSearch(searchForm);
     } else {
-      // Default navigation behavior
       const params = new URLSearchParams();
       Object.entries(searchForm).forEach(([key, value]) => {
         if (value) params.append(key, value);
@@ -79,32 +80,38 @@ export default function SearchForm({
         <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
           <form onSubmit={handleSearch} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* From (Leaflet / Nominatim) */}
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-black">
                   From
                 </label>
-                <input
-                  name="from"
-                  value={searchForm.from}
-                  onChange={handleSearchChange}
-                  placeholder="Departure city"
-                  className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition bg-white "
-                  required
-                />
+                <LeafletPlaceInput
+                      name="from"
+                      value={searchForm.from}
+                      onChange={(v) => setSearchForm((p) => ({ ...p, from: v }))}
+                      placeholder="Departure city"
+                    />
+
+        
+
               </div>
+
+              {/* To (Leaflet / Nominatim) */}
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-black">
                   To
                 </label>
-                <input
+                <LeafletPlaceInput
                   name="to"
                   value={searchForm.to}
-                  onChange={handleSearchChange}
+                  onChange={(value) =>
+                    setSearchForm((prev) => ({ ...prev, to: value }))
+                  }
                   placeholder="Destination city"
-                  className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition bg-white "
-                  required
                 />
               </div>
+
+              {/* Seats */}
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-black">
                   Number of Seats
@@ -116,9 +123,11 @@ export default function SearchForm({
                   value={searchForm.seats || ""}
                   onChange={handleSearchChange}
                   placeholder="Seats"
-                  className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition bg-white "
+                  className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition bg-white"
                 />
-              </div>{" "}
+              </div>
+
+              {/* Date */}
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-black">
                   Date
@@ -128,11 +137,12 @@ export default function SearchForm({
                   type="date"
                   value={searchForm.date}
                   onChange={handleSearchChange}
-                  className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition bg-white "
+                  className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition bg-white"
                   required
                 />
               </div>
             </div>
+
             <button
               type="submit"
               className="w-full py-4 bg-black text-white rounded-lg font-semibold text-lg hover:bg-gray-800 transition cursor-pointer"

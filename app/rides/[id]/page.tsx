@@ -1,7 +1,9 @@
 "use client";
+
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+
 import TripDetailsCard from "../../../components/rides/TripDetailsCard";
 import RouteMap from "../../../components/rides/RouteMap";
 import ServicesDisplay from "../../../components/rides/ServicesDisplay";
@@ -14,56 +16,30 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import api from "../../../api/api";
+import type { RideData } from "../../../components/rides/RideCard";
 
-import React from "react";
-
-interface RideData {
-  id: number;
-  departure_place: string;
-  arrival_place: string;
-  departure_date: string;
-  price: number;
-  nb_places_disponible: number;
-  details?: string;
-  user?: {
-    id?: number;
-    first_name?: string;
-    last_name?: string;
-    username?: string;
-    avatar?: string;
-    profile_picture?: string;
-    review_score?: number;
-    review_numbers?: number;
-    joining_date?: string;
-    date_joined?: string;
-    phone_number?: string;
-    email?: string;
-    professional?: boolean;
-  };
-  car?: {
-    model?: {
-      name?: string;
-    };
-    type?: string;
-    color?: string;
-  };
-  services?: Array<{
-    name: string;
-  }>;
+interface RideDetailPageProps {
+  params: { id: string };
 }
 
-export default function RideDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = React.use(params);
+interface ReservationDetail {
+  passengers: Array<{
+    id: number;
+    username: string;
+    phoneNumber: string;
+  }>;
+  totalSeats: number;
+  reservationDate: string;
+}
+
+export default function RideDetailPage({ params }: RideDetailPageProps) {
+  const { id } = params;
   const [ride, setRide] = useState<RideData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
+  const [isReservationModalOpen, setIsReservationModalOpen] =
+    useState(false);
 
-  // Get current user from Redux store
   const currentUser = useSelector((state: RootState) => state.user.user);
 
   useEffect(() => {
@@ -84,13 +60,13 @@ export default function RideDetailPage({
   if (loading) return <div className="p-8 text-center">Loading...</div>;
   if (error || !ride) return notFound();
 
-  // Check if current user is the owner of the ride
-  const isRideOwner = currentUser && ride.user?.id === currentUser.id;
+  const isRideOwner = currentUser && ride.user.id === currentUser.id;
 
   const renderStars = (rating: number) => {
     const stars = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
+
     for (let i = 0; i < fullStars; i++) {
       stars.push(
         <span key={i} className="text-yellow-400 text-xl">
@@ -117,9 +93,7 @@ export default function RideDetailPage({
 
   const parseReservationDetails = (details: string | undefined) => {
     if (!details) return [];
-
     try {
-      // Split by newlines and parse each JSON line
       const lines = details.split("\n").filter((line) => line.trim());
       return lines.map((line) => JSON.parse(line));
     } catch (error) {
@@ -128,22 +102,11 @@ export default function RideDetailPage({
     }
   };
 
-  interface ReservationDetail {
-    passengers: Array<{
-      id: number;
-      username: string;
-      phoneNumber: string;
-    }>;
-    totalSeats: number;
-    reservationDate: string;
-  }
-
   const handleReserve = () => {
     setIsReservationModalOpen(true);
   };
 
   const handleReservationSuccess = () => {
-    // Refresh ride data to update available seats
     api
       .get(`/api/posts/${id}/`)
       .then((res) => {
@@ -153,17 +116,12 @@ export default function RideDetailPage({
   };
 
   const handleContact = () => {
-    console.log(
-      "Contact driver:",
-      ride.user?.first_name || ride.user?.username
-    );
     alert("Contact functionality would be implemented here");
   };
 
   return (
     <main className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
-        {/* Back Button */}
         <Link
           href="/rides"
           className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-6 transition"
@@ -177,11 +135,15 @@ export default function RideDetailPage({
             <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
               <Image
                 src={
-                  ride.user?.avatar ||
-                  ride.user?.profile_picture ||
+                  ride.user.avatar ||
+                  ride.user.profile_picture ||
                   "https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg"
                 }
-                alt={ride.user?.first_name || ride.user?.username || "Driver"}
+                alt={
+                  ride.user.first_name ||
+                  ride.user.username ||
+                  "Driver"
+                }
                 width={80}
                 height={80}
                 className="w-20 h-20 rounded-full border-4 border-white shadow-lg object-cover"
@@ -192,24 +154,24 @@ export default function RideDetailPage({
                 </h1>
                 <div className="flex items-center gap-4 text-sm text-gray-600">
                   <span className="font-semibold text-lg text-gray-800">
-                    {ride.user?.first_name} {ride.user?.last_name}{" "}
-                    {ride.user?.professional && (
+                    {ride.user.first_name} {ride.user.last_name}{" "}
+                    {ride.user.professional && (
                       <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-semibold">
                         Pro
                       </span>
                     )}
                   </span>
                   <div className="flex items-center gap-1">
-                    {renderStars(ride.user?.review_score || 0)}
+                    {renderStars(ride.user.review_score || 0)}
                     <span className="ml-1">
-                      ({ride.user?.review_score?.toFixed(1) || "0.0"})
+                      ({(ride.user.review_score || 0).toFixed(1)})
                     </span>
                   </div>
-                  <span>• {ride.user?.review_numbers || 0} reviews</span>
+                  <span>• {ride.user.review_numbers || 0} reviews</span>
                   <span>
                     • Member since{" "}
-                    {ride.user?.joining_date?.slice(0, 4) ||
-                      ride.user?.date_joined?.slice(0, 4) ||
+                    {ride.user.joining_date?.slice(0, 4) ||
+                      ride.user.date_joined?.slice(0, 4) ||
                       "-"}
                   </span>
                 </div>
@@ -223,9 +185,10 @@ export default function RideDetailPage({
             </div>
           </div>
 
+          {/* Content */}
           <div className="p-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Main Info */}
+              {/* Main info */}
               <div className="lg:col-span-2 space-y-8">
                 <TripDetailsCard
                   departure={{
@@ -233,30 +196,35 @@ export default function RideDetailPage({
                     date: ride.departure_date,
                   }}
                   car={
-                    ride.car?.model?.name
+                    ride.car.model?.name
                       ? `${ride.car.model.name} (${ride.car.type}, ${ride.car.color})`
-                      : `${ride.car?.type || ""}, ${ride.car?.color || ""}`
+                      : `${ride.car.type}, ${ride.car.color}`
                   }
                   availableSeats={ride.nb_places_disponible}
                 />
 
-                <RouteMap from={ride.departure_place} to={ride.arrival_place} />
-
-                <ServicesDisplay
-                  services={
-                    ride.services?.map((s: { name: string }) => s.name) || []
-                  }
+                <RouteMap
+                  from={ride.departure_place}
+                  to={ride.arrival_place}
                 />
 
-                {/* Reservation Details */}
+                <ServicesDisplay
+                  services={ride.services.map((s) => s.name)}
+                />
+
                 {ride.details && isRideOwner && (
                   <div className="space-y-4">
                     <h2 className="text-2xl font-bold text-gray-900">
                       Reservation Details
                     </h2>
                     <div className="bg-gray-50 rounded-xl p-6">
-                      {parseReservationDetails(ride.details).map(
-                        (reservation: ReservationDetail, index) => (
+                      {parseReservationDetails(
+                        ride.details as any
+                      ).map(
+                        (
+                          reservation: ReservationDetail,
+                          index: number
+                        ) => (
                           <div
                             key={index}
                             className="mb-4 p-4 bg-white rounded-lg border border-gray-200"
@@ -267,7 +235,7 @@ export default function RideDetailPage({
                                   Passengers
                                 </h4>
                                 {reservation.passengers?.map(
-                                  (passenger, passengerIndex: number) => (
+                                  (passenger, passengerIndex) => (
                                     <div
                                       key={passengerIndex}
                                       className="text-sm text-gray-600"
@@ -303,10 +271,11 @@ export default function RideDetailPage({
                                 <p className="text-sm text-gray-600">
                                   {new Date(
                                     reservation.reservationDate
-                                  ).toLocaleDateString()}{" "}
-                                  {new Date(
-                                    reservation.reservationDate
-                                  ).toLocaleTimeString()}
+                                  ).toLocaleDateString() +
+                                    " " +
+                                    new Date(
+                                      reservation.reservationDate
+                                    ).toLocaleTimeString()}
                                 </p>
                               </div>
                             </div>
@@ -316,21 +285,6 @@ export default function RideDetailPage({
                     </div>
                   </div>
                 )}
-
-                {/* Optionally, pickup points if available in API */}
-                {/* <PickupPoints points={ride.pickupPoints || []} /> */}
-
-                {/* Description (if you have a description field in API) */}
-                {/* <div className="space-y-4">
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    Description
-                  </h2>
-                  <div className="bg-gray-50 rounded-xl p-6">
-                    <p className="text-gray-700 leading-relaxed">
-                      {ride.description}
-                    </p>
-                  </div>
-                </div> */}
               </div>
 
               {/* Sidebar */}
@@ -338,23 +292,23 @@ export default function RideDetailPage({
                 <DriverInfoCard
                   driver={{
                     name:
-                      `${ride.user?.first_name || ""} ${
-                        ride.user?.last_name || ""
+                      `${ride.user.first_name || ""} ${
+                        ride.user.last_name || ""
                       }`.trim() ||
-                      ride.user?.username ||
+                      ride.user.username ||
                       "Unknown",
                     avatar:
-                      ride.user?.avatar ||
-                      ride.user?.profile_picture ||
+                      ride.user.avatar ||
+                      ride.user.profile_picture ||
                       "https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg",
-                    rating: ride.user?.review_score || 0,
-                    totalTrips: ride.user?.review_numbers || 0,
+                    rating: ride.user.review_score || 0,
+                    totalTrips: ride.user.review_numbers || 0,
                     memberSince:
-                      ride.user?.joining_date?.slice(0, 4) ||
-                      ride.user?.date_joined?.slice(0, 4) ||
+                      ride.user.joining_date?.slice(0, 4) ||
+                      ride.user.date_joined?.slice(0, 4) ||
                       "-",
-                    phoneVerified: !!ride.user?.phone_number,
-                    emailVerified: !!ride.user?.email,
+                    phoneVerified: !!ride.user.phone_number,
+                    emailVerified: !!ride.user.email,
                   }}
                 />
 
@@ -365,7 +319,9 @@ export default function RideDetailPage({
                   onContact={handleContact}
                   disabled={isRideOwner}
                   disableReason={
-                    isRideOwner ? "You can't reserve your own ride" : undefined
+                    isRideOwner
+                      ? "You can't reserve your own ride"
+                      : undefined
                   }
                 />
 
@@ -376,12 +332,11 @@ export default function RideDetailPage({
         </div>
       </div>
 
-      {/* Reservation Modal */}
       <ReservationModal
         isOpen={isReservationModalOpen}
         onClose={() => setIsReservationModalOpen(false)}
-        postId={parseInt(id)}
-        availableSeats={ride?.nb_places_disponible || 0}
+        postId={parseInt(id, 10)}
+        availableSeats={ride.nb_places_disponible}
         onSuccess={handleReservationSuccess}
       />
     </main>

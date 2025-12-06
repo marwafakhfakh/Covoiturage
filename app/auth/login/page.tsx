@@ -32,26 +32,29 @@ export default function Login() {
       [name]: type === "checkbox" ? checked : value,
     });
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
-  
+    
+    // ✅ NETTOYER tout token avant login
+    localStorage.removeItem('auth_token');
+    console.log('🧹 Token supprimé avant login');
+    
     try {
       const body = {
         username: formData.email,
         password: formData.password,
       };
       const response = await api.post("/api/auth/login/", body);
+      
       if (response.data.token) {
         localStorage.setItem("auth_token", response.data.token);
+        console.log('✅ Nouveau token sauvegardé');
       }
-
-      // 🔹 charger le profil immédiatement et le mettre dans Redux
+      
       const profileRes = await api.get("/api/auth/profile/");
       dispatch(setUser(profileRes.data));
-      
       router.push("/rides");
     } catch (err: any) {
       console.error('❌ Login error:', err.response?.data);
@@ -60,7 +63,7 @@ export default function Login() {
       setLoading(false);
     }
   };
-
+  
   return (
     <AuthLayout title="Welcome back" subtitle="Sign in to your account">
       <AuthCard>

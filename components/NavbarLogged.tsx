@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import api from "../api/api";
+import Image from "next/image";
+
 
 interface NavbarLoggedProps {
   user: {
@@ -36,12 +38,19 @@ export default function NavbarLogged({ user }: NavbarLoggedProps) {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link
-            href="/"
-            className="font-bold text-2xl text-black hover:text-gray-700 transition flex items-center"
-          >
-            <span className="mr-2">🚗</span>
-            Covoiturage
-          </Link>
+  href="/"
+  className="flex items-center gap-2 hover:opacity-90 transition"
+>
+  <Image
+    src="/namlaa.png"  // chemin dans /public
+    alt="Namlaa"
+    width={90}
+    height={60}
+    className="object-contain"
+  />
+ 
+</Link>
+
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
