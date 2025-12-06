@@ -13,8 +13,8 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({
-  title = "Share the Journey",
-  subtitle = "Connect with travelers, share costs, and make new friends while reducing your carbon footprint.",
+  title = "ثنيتي وثنيتك… علاش ما يوّلوش كيف كيف",
+  subtitle = "نملة هي منصة كوفويتراج (مشاركة الركوب) مبتكرة في تونس، تربط بين السائقين والركّاب باش يشاركوا نفس الطريق ويقسّموا مصاريف التنقل بطريقة آمنة، سهلة، واقتصادية والأهم من هذا، نملة موش منصة ربح، بل منصة تشاركية هدفها تخفيض المصاريف وتقليل الزحمة، موش تحقيق الأرباح على حساب الركّاب",
   backgroundImage = "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2021&q=80",
   primaryButtonText = "Find a Ride",
   primaryButtonHref = "/rides",

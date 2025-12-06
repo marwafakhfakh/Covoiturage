@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ReactNode } from "react";
+import Image from "next/image";
 
 interface AuthLayoutProps {
   children: ReactNode;
@@ -20,11 +21,14 @@ export default function AuthLayout({
     >
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
-        <div className="text-center">
-          <Link href="/" className="flex items-center justify-center mb-6">
-            <span className="text-3xl mr-3">🚗</span>
-            <span className="font-bold text-3xl text-black">Covoiturage</span>
-          </Link>
+        <div className="text-center flex flex-col items-center gap-3">
+          <Image
+            src="/namlaa.png"
+            alt="Namlaa"
+            width={90}
+            height={60}
+            className="object-contain"
+          />
           <h2 className="text-3xl font-bold text-black">{title}</h2>
           <p className="mt-2 text-gray-600">{subtitle}</p>
         </div>

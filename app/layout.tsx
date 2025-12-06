@@ -4,8 +4,10 @@ import "./globals.css";
 import NavbarApp from "../components/NavbarApp";
 import ReduxProvider from "../store/ReduxProvider";
 import UserProfileLoader from "../components/UserProfileLoader";
-import Footer from "../components/Footer";
-import Script from "next/script";
+import Footer from "../components/Footer"
+import "leaflet/dist/leaflet.css";
+;
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,11 +34,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black min-h-screen flex flex-col`}
       >
-        {/* Script Google Maps + Places */}
-        <Script
-          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GMAPS_API_KEY}&libraries=places`}
-          strategy="beforeInteractive"
-        />
+     
+      
 
         <ReduxProvider>
           <UserProfileLoader>

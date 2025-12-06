@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-
+import Image from "next/image";
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
@@ -11,12 +11,16 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="font-bold text-2xl text-black hover:text-gray-700 transition flex items-center"
+            className="flex items-center gap-2 hover:opacity-90 transition"
           >
-            <span className="mr-2">🚗</span>
-            Covoiturage
+            <Image
+              src="/namlaa.png" // fichier dans /public
+              alt="Namlaa"
+              width={90}
+              height={60}
+              className="object-contain"
+            />
           </Link>
-
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <Link

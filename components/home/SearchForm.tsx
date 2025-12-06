@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import LeafletPlaceInput from "../common/LeafletPlaceInput";
+import { useState } from "react";
 
 interface SearchFormData {
-  from: string;
-  to: string;
+  from: string;   // départ : ville / délégation
+  to: string;     // arrivée : ville / délégation
   date: string;
   seats: string;
 }
@@ -24,36 +23,17 @@ export default function SearchForm({
   className = "",
 }: SearchFormProps) {
   const [searchForm, setSearchForm] = useState<SearchFormData>({
-    from: "",
-    to: "",
-    date: "",
+    from: initialData.from || "",
+    to: initialData.to || "",
+    date: initialData.date || "",
     seats: initialData.seats || "1",
-    ...initialData,
   });
-
-  // Sync form state with initialData when it changes
-  useEffect(() => {
-    if (
-      initialData &&
-      Object.keys(initialData).length > 0 &&
-      Object.entries(initialData).some(
-        ([key, value]) =>
-          value !== undefined &&
-          value !== searchForm[key as keyof SearchFormData]
-      )
-    ) {
-      setSearchForm((prev) => ({
-        ...prev,
-        ...initialData,
-        seats: initialData.seats || "1",
-      }));
-    }
-  }, [initialData, searchForm]);
 
   const handleSearchChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setSearchForm({ ...searchForm, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setSearchForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -80,34 +60,33 @@ export default function SearchForm({
         <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
           <form onSubmit={handleSearch} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {/* From (Leaflet / Nominatim) */}
+              {/* From (délégation / ville de départ) */}
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-black">
                   From
                 </label>
-                <LeafletPlaceInput
-                      name="from"
-                      value={searchForm.from}
-                      onChange={(v) => setSearchForm((p) => ({ ...p, from: v }))}
-                      placeholder="Departure city"
-                    />
-
-        
-
+                <input
+                  name="from"
+                  value={searchForm.from}
+                  onChange={handleSearchChange}
+                  placeholder="Ex: Sfax, Sidi Mansour"
+                  className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition bg-white"
+                  required
+                />
               </div>
 
-              {/* To (Leaflet / Nominatim) */}
+              {/* To (délégation / ville d’arrivée) */}
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-black">
                   To
                 </label>
-                <LeafletPlaceInput
+                <input
                   name="to"
                   value={searchForm.to}
-                  onChange={(value) =>
-                    setSearchForm((prev) => ({ ...prev, to: value }))
-                  }
-                  placeholder="Destination city"
+                  onChange={handleSearchChange}
+                  placeholder="Ex: Tunis, La Marsa"
+                  className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition bg-white"
+                  required
                 />
               </div>
 

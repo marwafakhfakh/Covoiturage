@@ -194,16 +194,12 @@ export default function RidesPage() {
       if (value) params.append(key, value);
     });
     if (typeof window !== "undefined") {
-      window.history.replaceState(
-        null,
-        "",
-        `/rides?${params.toString()}`
-      );
+      window.history.replaceState(null, "", `/rides?${params.toString()}`);
     }
     setSearchParams(formData);
     fetchRides(`/api/posts/?${params.toString()}`);
   };
-
+  
   const handleSortChange = (sortBy: string) => {
     setFilters((prev) => ({ ...prev, sortBy }));
   };
@@ -245,12 +241,12 @@ export default function RidesPage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      <SearchForm
-        initialData={searchParams}
-        onSearch={handleSearch}
-        title="Find Your Perfect Ride"
-        className="pt-4 pb-0"
-      />
+  <SearchForm
+    initialData={searchParams}
+    onSearch={handleSearch}
+    title="Find Your Perfect Ride"
+    className="pt-4 pb-0"
+  />
 
       <PageHeader
         title="Available Rides"

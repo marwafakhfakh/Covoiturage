@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+import Image from "next/image";
 export default function Footer() {
   return (
     <footer className="bg-gray-100 text-gray-800 border-t border-gray-200">
@@ -9,12 +9,18 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Company Info */}
             <div className="col-span-1 lg:col-span-2">
-              <Link href="/" className="flex items-center mb-3">
-                <span className="text-xl mr-2">🚗</span>
-                <span className="font-bold text-xl text-black">
-                  Covoiturage
-                </span>
-              </Link>
+            <Link
+            href="/"
+            className="flex items-center gap-2 hover:opacity-90 transition"
+          >
+            <Image
+              src="/namlaa.png" // fichier dans /public
+              alt="Namlaa"
+              width={40}
+              height={40}
+              className="object-contain"
+            />
+          </Link>
               <p className="text-gray-600 mb-4 max-w-md text-sm">
                 Connecting travelers across the world. Share rides, save money,
                 and make new friends while reducing your carbon footprint.
