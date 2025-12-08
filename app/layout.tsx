@@ -4,9 +4,9 @@ import "./globals.css";
 import NavbarApp from "../components/NavbarApp";
 import ReduxProvider from "../store/ReduxProvider";
 import UserProfileLoader from "../components/UserProfileLoader";
-import Footer from "../components/Footer"
+import Footer from "../components/Footer";
 import "leaflet/dist/leaflet.css";
-;
+
 
 
 const geistSans = Geist({

@@ -7,7 +7,12 @@ import FormSection from "../../components/offer/FormSection";
 import SuccessMessage from "../../components/common/SuccessMessage";
 import api from "../../api/api";
 import type { RootState } from "../../store";
-import DelegationMap, { Delegation } from "./DelegationMap";
+// import DelegationMap, { Delegation } from "./DelegationMap";
+// import DelegationMapLeaflet, { Delegation } from "./DelegationMapLeaflet";
+
+import RouteMapLeaflet from "./RouteMapLeaflet";
+import type { Delegation } from "./DelegationMapLeaflet";
+
 
 type Car = {
   id: number;
@@ -148,6 +153,12 @@ export default function OfferRidePage() {
     (car) => car.id === parseInt(form.selected_car_id)
   );
 
+  const [departureQuery, setDepartureQuery] = useState("");
+
+  const filteredDepartureDelegations = delegations.filter((d) => d.name.toLowerCase().includes(departureQuery.toLowerCase())
+  );
+
+
   return (
     <main className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
@@ -173,35 +184,88 @@ export default function OfferRidePage() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Route Section */}
-              <FormSection title="Information du trajet">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <DelegationMap
-                    selectedValue={form.departure_place}
-                    onSelect={(value) =>
-                      setForm((prev) => ({ ...prev, departure_place: value }))
-                    }
-                    label="Lieu de départ"
+              <FormSection title="Route Information">
+                  {/* Bloc carte Leaflet au-dessus des selects */}
+                  <RouteMapLeaflet
                     delegations={delegations}
+                    departureName={form.departure_place}
+                    arrivalName={form.arrival_place}
                   />
 
-                  <DelegationMap
-                    selectedValue={form.arrival_place}
-                    onSelect={(value) =>
-                      setForm((prev) => ({ ...prev, arrival_place: value }))
-                    }
-                    label="Lieu d'arrivée"
-                    delegations={delegations}
-                  />
-                </div>
+                  {/* Tes selects restent comme avant dessous */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
 
-                {distanceKm > 0 && (
-                  <div className="mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-sm text-emerald-800">
-                    Distance estimée : {distanceKm.toFixed(1)} km
-                    <br />
-                    Montant estimé : {estimatedPrice.toFixed(3)} TND
+                      {/* <div className="space-y-2">
+                        <label className="block text-sm font-semibold text-gray-700">
+                          Departure Location
+                        </label>
+
+                        <input
+                          type="text"
+                          value={departureQuery}
+                          onChange={(e) => setDepartureQuery(e.target.value)}
+                          placeholder="Rechercher une délégation..."
+                          className="w-full mb-2 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                        />
+
+                        <select
+                          name="departure_place"
+                          value={form.departure_place}
+                          onChange={handleChange}
+                          className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-white"
+                          required
+                        >
+                          <option value="">Select departure</option>
+                          {filteredDepartureDelegations.map((d) => (
+                            <option key={d.id} value={d.name}>
+                              {d.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div> */}
+
+                    <div className="space-y-2">
+                      <label className="block text-sm font-semibold text-gray-700">
+                        Departure Location
+                      </label>
+                      <select
+                        name="departure_place"
+                        value={form.departure_place}
+                        className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent transition bg-white"
+                        onChange={handleChange}
+                        required
+                      >
+                        <option value="">Select departure</option>
+                        {delegations.map((d) => (
+                          <option key={d.id} value={d.name}>
+                            {d.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="block text-sm font-semibold text-gray-700">
+                        Arrival Location
+                      </label>
+                      <select
+                        name="arrival_place"
+                        value={form.arrival_place}
+                        className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent transition bg-white"
+                        onChange={handleChange}
+                        required
+                      >
+                        <option value="">Select arrival</option>
+                        {delegations.map((d) => (
+                          <option key={d.id} value={d.name}>
+                            {d.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                )}
-              </FormSection>
+                </FormSection>
+
 
               {/* Trip Details Section */}
               <FormSection title="Planning et Disponibilité">
