@@ -17,11 +17,11 @@ interface RootState {
 // Même shape que dans AddCarModal
 interface CarFormData {
   model: string;
-  type: string;
+  vehicle_type: string;
   color: string;
   serialNumber: string;
   seats: number;
-  engineType: string;
+  engine_type: string;
   greyCard: string;
   year: number;
   image: File | null;
@@ -90,86 +90,236 @@ export default function ProfilePage() {
   }, []);
 
   // Voitures possédées
+  // useEffect(() => {
+  //   async function fetchCars() {
+  //     try {
+  //       const res = await api.get("/api/cars/");
+  //       const data = Array.isArray(res.data) ? res.data : [];
+  //       const cars: Car[] = data.map((item: any) => ({
+  //         id: item.id,
+  //         brand: "", // à compléter si ton API renvoie la marque
+  //         model: item.model?.toString() || "",
+  //         year: item.year ?? "",
+  //         color: item.color || "",
+  //         seats: item.nb_place,
+  //         fuelType: item.engine_type,
+  //         licensePlate: item.serial_number,
+  //         image: item.image,
+  //       }));
+  //       setOwnedCars(cars);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   }
+  //   fetchCars();
+  // }, []);
   useEffect(() => {
-    async function fetchCars() {
-      try {
-        const res = await api.get("/api/cars/");
-        const data = Array.isArray(res.data) ? res.data : [];
-        const cars: Car[] = data.map((item: any) => ({
-          id: item.id,
-          brand: "", // à compléter si ton API renvoie la marque
-          model: item.model?.toString() || "",
-          year: item.year ?? "",
-          color: item.color || "",
-          seats: item.nb_place,
-          fuelType: item.engine_type,
-          licensePlate: item.serial_number,
-          image: item.image,
-        }));
-        setOwnedCars(cars);
-      } catch (err) {
-        console.error(err);
-      }
+  async function fetchCars() {
+    try {
+      const res = await api.get("/api/cars/");
+      const data = Array.isArray(res.data) ? res.data : [];
+      
+      const cars: Car[] = data.map((item: any) => ({
+        id: item.id,
+        // ✅ UTILISER LES DETAILS NESTED
+        brand: item.model_details?.brand?.name || "",
+        model: item.model_details?.name || "",
+        year: item.year?.toString() || "",
+        color: item.color_details?.name || "",
+        seats: item.nb_place || 0,
+        fuelType: item.engine_type_details?.name || "",
+        licensePlate: item.serial_number || "",
+        image: item.image || "",
+      }));
+      
+      setOwnedCars(cars);
+      console.log("✅ Voitures chargées:", cars);
+    } catch (err) {
+      console.error("❌ Erreur fetch cars:", err);
     }
-    fetchCars();
-  }, []);
+  }
+  
+  fetchCars();
+}, []);
+
 
   // ✅ Création de voiture côté backend + MAJ state
-  const handleAddCar = async (formData: CarFormData) => {
-    if (!user?.id) {
-      alert("Utilisateur non connecté.");
+//   const handleAddCar = async (formData: CarFormData) => {
+//     if (!user?.id) {
+//       alert("Utilisateur non connecté.");
+//       return;
+//     }
+  
+//     try {
+//       const data = new FormData();
+      
+//       data.append("model", formData.model);                 // ID du Model (ex: "1")
+//     data.append("type", formData.type);                  // ex: "SUV"
+//     data.append("color", formData.color);                // ex: "Silver"
+//     data.append("serial_number", formData.serialNumber.toUpperCase());
+//     data.append("nb_place", String(formData.seats));     // champ nb_place en DB
+//     data.append("engine_type", formData.engineType);     // ex: "Electric"
+//     data.append("grey_card", formData.greyCard || "");
+//     data.append("year", String(formData.year));          // ex: "2025"
+//     if (formData.image) data.append("image", formData.image);
+
+//     console.log("🚗 FormData envoyée:");
+//     for (const [k, v] of data.entries()) console.log(k, v);
+
+//     const res = await api.post("/api/cars/", data);
+
+//     const newCar: Car = {
+//       id: res.data.id,
+//       brand: "", // à remplir si l’API renvoie la marque
+//       model: formData.model,
+//       year: formData.year,
+//       color: formData.color,
+//       seats: formData.seats,
+//       fuelType: formData.engineType,
+//       licensePlate: formData.serialNumber.toUpperCase(),
+//       image: res.data.image || "",
+//     };
+
+//     setOwnedCars(prev => [...prev, newCar]);
+//     setIsModalOpen(false);
+//     alert("✅ Voiture ajoutée !");
+//   } catch (err: any) {
+//     console.error("❌ ERROR /api/cars/:", err.response?.data || err);
+
+//     if (err.response?.data) {
+//       const errors = err.response.data as Record<string, any>;
+//       let msg = "Erreurs:\n";
+//       for (const [field, error] of Object.entries(errors)) {
+//         msg += `${field}: ${Array.isArray(error) ? error[0] : error}\n`;
+//       }
+//       alert(msg);
+//     } else {
+//       alert("Erreur serveur 500 lors de la création de la voiture.");
+//     }
+//   }
+// };
+const handleAddCar = async (formData: CarFormData) => {
+  if (!user?.id) {
+    alert("Utilisateur non connecté.");
+    return;
+  }
+
+  console.log("🔍 formData reçu:", formData);
+
+  try {
+    const data = new FormData();
+
+    // utiliser les bons champs
+    const modelId = formData.model ?? "";
+    const vehicleTypeId = formData.vehicle_type ?? "";
+    const colorId = formData.color ?? "";
+    const engineTypeId = formData.engine_type ?? "";
+
+    console.log("🔍 IDs calculés:", {
+      modelId,
+      vehicleTypeId,
+      colorId,
+      engineTypeId,
+    });
+
+    if (!modelId || !vehicleTypeId || !colorId || !engineTypeId) {
+      alert("Veuillez sélectionner modèle, type, couleur et type de moteur.");
       return;
     }
-  
-    try {
-      const data = new FormData();
-      
-      data.append("model", formData.model);                 // ID du Model (ex: "1")
-    data.append("type", formData.type);                  // ex: "SUV"
-    data.append("color", formData.color);                // ex: "Silver"
-    data.append("serial_number", formData.serialNumber.toUpperCase());
-    data.append("nb_place", String(formData.seats));     // champ nb_place en DB
-    data.append("engine_type", formData.engineType);     // ex: "Electric"
+
+    data.append("model", String(modelId));
+    data.append("vehicle_type", String(vehicleTypeId));
+    data.append("color", String(colorId));
+
+    const rawSerial = formData.serialNumber ?? "";
+    const serial = String(rawSerial).toUpperCase().trim();
+    if (!serial) {
+      alert("La plaque (serialNumber) est obligatoire.");
+      return;
+    }
+    data.append("serial_number", serial);
+
+    data.append("nb_place", String(formData.seats ?? ""));
+    data.append("engine_type", String(engineTypeId));
     data.append("grey_card", formData.greyCard || "");
-    data.append("year", String(formData.year));          // ex: "2025"
+    data.append("year", formData.year ? String(formData.year) : "");
     if (formData.image) data.append("image", formData.image);
 
     console.log("🚗 FormData envoyée:");
     for (const [k, v] of data.entries()) console.log(k, v);
 
-    const res = await api.post("/api/cars/", data);
+    const res = await api.post("/api/cars/", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
 
-    const newCar: Car = {
-      id: res.data.id,
-      brand: "", // à remplir si l’API renvoie la marque
-      model: formData.model,
-      year: formData.year,
-      color: formData.color,
-      seats: formData.seats,
-      fuelType: formData.engineType,
-      licensePlate: formData.serialNumber.toUpperCase(),
-      image: res.data.image || "",
-    };
-
-    setOwnedCars(prev => [...prev, newCar]);
-    setIsModalOpen(false);
-    alert("✅ Voiture ajoutée !");
+    // construction de newCar…
   } catch (err: any) {
     console.error("❌ ERROR /api/cars/:", err.response?.data || err);
-
-    if (err.response?.data) {
-      const errors = err.response.data as Record<string, any>;
-      let msg = "Erreurs:\n";
-      for (const [field, error] of Object.entries(errors)) {
-        msg += `${field}: ${Array.isArray(error) ? error[0] : error}\n`;
-      }
-      alert(msg);
-    } else {
-      alert("Erreur serveur 500 lors de la création de la voiture.");
-    }
   }
 };
-  
+
+
+//   const handleAddCar = async (formData: CarFormData) => {
+//   if (!user?.id) {
+//     alert("Utilisateur non connecté.");
+//     return;
+//   }
+
+//   try {
+//     const data = new FormData();
+
+//     data.append("model", formData.model.toString());
+//     data.append("vehicle_type", formData.type.toString());
+//     data.append("color", formData.color.toString());
+
+//     // ✅ sécuriser serialNumber
+//     const serial = (formData.serialNumber || "").toString().toUpperCase().trim();
+//     if (!serial) {
+//       alert("La plaque d'immatriculation est obligatoire.");
+//       return;
+//     }
+//     data.append("serial_number", serial);
+
+//     data.append("nb_place", String(formData.seats));
+//     data.append("engine_type", formData.engineType.toString());
+//     data.append("grey_card", formData.greyCard || "");
+//     data.append("year", formData.year ? String(formData.year) : "");
+//     if (formData.image) data.append("image", formData.image);
+
+//     const res = await api.post("/api/cars/", data, {
+//       headers: { "Content-Type": "multipart/form-data" },
+//     });
+
+//     const newCar: Car = {
+//       id: res.data.id,
+//       brand: res.data.model_details?.brand?.name || "",
+//       model: res.data.model_details?.name || "",
+//       year: res.data.year ?? "",
+//       color: res.data.color_details?.name || "",
+//       seats: res.data.nb_place,
+//       fuelType: res.data.engine_type_details?.name || "",
+//       licensePlate: res.data.serial_number || "",
+//       image: res.data.image || "",
+//     };
+
+//     setOwnedCars(prev => [...prev, newCar]);
+//     setIsModalOpen(false);
+//     alert("✅ Voiture ajoutée !");
+//   } catch (err: any) {
+//     console.error("❌ ERROR /api/cars/:", err.response?.data || err);
+//     if (err.response?.data) {
+//       const errors = err.response.data as Record<string, any>;
+//       let msg = "Erreurs:\n";
+//       for (const [field, error] of Object.entries(errors)) {
+//         msg += `${field}: ${Array.isArray(error) ? error[0] : error}\n`;
+//       }
+//       alert(msg);
+//     } else {
+//       alert("Erreur serveur lors de la création de la voiture.");
+//     }
+//   }
+// };
+
 
   const handleEditCar = (car: Car) => {
     console.log("Edit car:", car);

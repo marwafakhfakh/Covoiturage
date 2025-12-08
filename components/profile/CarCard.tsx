@@ -30,7 +30,7 @@ export default function CarCard({
       className={`border border-gray-200 rounded-xl p-6 hover:shadow-md transition ${className}`}
     >
       <div className="aspect-video rounded-lg overflow-hidden mb-4 bg-gray-100">
-        <Image
+        {/* <Image
           src={
             car.image
               ? car.image
@@ -40,7 +40,7 @@ export default function CarCard({
           width={400}
           height={225}
           className="w-full h-full object-cover"
-        />
+        /> */}
       </div>
 
       <div className="space-y-3">
