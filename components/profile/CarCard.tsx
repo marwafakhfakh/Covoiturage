@@ -30,7 +30,7 @@ export default function CarCard({
       className={`border border-gray-200 rounded-xl p-6 hover:shadow-md transition ${className}`}
     >
       <div className="aspect-video rounded-lg overflow-hidden mb-4 bg-gray-100">
-        {/* <Image
+        <Image
           src={
             car.image
               ? car.image

@@ -10,6 +10,13 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "dev.namiaa.com" },
       { protocol: "http", hostname: "localhost" },
       { protocol: "http", hostname: "localhost", port: "8000" },
+      // ➜ ajout pour tes images de voitures
+      {
+        protocol: "https",
+        hostname: "dev.namlaa.com",
+        port: "",
+        pathname: "/media/**",   // couvre /media/car_images/...
+      },
     ],
   },
 };

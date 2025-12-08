@@ -23,18 +23,18 @@ export default function StatsSection({
   stats = [
     {
       value: "50,000+",
-      label: "Active Users",
-      description: "Join our growing community of travelers",
+      label: "Utilisateurs actifs",
+      description: "Rejoignez notre communauté de voyageurs en pleine croissance",
     },
     {
       value: "1M+",
-      label: "Rides Shared",
-      description: "Millions of successful journeys completed",
+      label: "Trajets partagés",
+      description: "Des millions de trajets réussis effectués",
     },
     {
       value: "95%",
-      label: "Satisfaction Rate",
-      description: "Highly rated by our community",
+      label: "Taux de satisfaction",
+      description: "Très bien noté par notre communauté",
     },
   ],
   className = "",

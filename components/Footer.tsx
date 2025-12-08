@@ -21,10 +21,11 @@ export default function Footer() {
               className="object-contain"
             />
           </Link>
-              <p className="text-gray-600 mb-4 max-w-md text-sm">
-                Connecting travelers across the world. Share rides, save money,
-                and make new friends while reducing your carbon footprint.
-              </p>
+          <p className="text-gray-600 mb-4 max-w-md text-sm">
+  Connecter les voyageurs à travers le monde. Partagez des trajets, économisez de l'argent,
+  et faites de nouvelles rencontres tout en réduisant votre empreinte carbone.
+</p>
+
               <div className="flex space-x-3">
                 <a
                   href="#"
@@ -83,49 +84,49 @@ export default function Footer() {
 
             {/* Quick Links */}
             <div>
-              <h3 className="font-semibold text-base mb-3 text-black">
-                Quick Links
-              </h3>
-              <ul className="space-y-2">
-                <li>
-                  <Link
-                    href="/rides"
-                    className="text-gray-600 hover:text-black transition-colors text-sm"
-                  >
-                    Find Rides
-                  </Link>
+  <h3 className="font-semibold text-base mb-3 text-black">
+    Liens rapides
+  </h3>
+  <ul className="space-y-2">
+    <li>
+      <Link
+        href="/rides"
+        className="text-gray-600 hover:text-black transition-colors text-sm"
+      >
+        Trouver des trajets
+      </Link>
+    </li>
+    <li>
+      <Link
+        href="/offer"
+        className="text-gray-600 hover:text-black transition-colors text-sm"
+      >
+        Proposer un trajet
+      </Link>
+    </li>
+    <li>
+      <Link
+        href="/profile"
+        className="text-gray-600 hover:text-black transition-colors text-sm"
+      >
+        Mon profil
+      </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/offer"
-                    className="text-gray-600 hover:text-black transition-colors text-sm"
-                  >
-                    Offer Ride
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/profile"
-                    className="text-gray-600 hover:text-black transition-colors text-sm"
-                  >
-                    My Profile
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/how-it-works"
-                    className="text-gray-600 hover:text-black transition-colors text-sm"
-                  >
-                    How It Works
-                  </Link>
-                </li>
-              </ul>
-            </div>
+                <Link
+        href="/how-it-works"
+        className="text-gray-600 hover:text-black transition-colors text-sm"
+      >
+        Comment ça marche
+      </Link>
+    </li>
+  </ul>
+</div>
 
             {/* Support */}
             <div>
               <h3 className="font-semibold text-base mb-3 text-black">
-                Support
+              Assistance
               </h3>
               <ul className="space-y-2">
                 <li>
@@ -133,7 +134,7 @@ export default function Footer() {
                     href="/help"
                     className="text-gray-600 hover:text-black transition-colors text-sm"
                   >
-                    Help Center
+                      Centre d’aide
                   </Link>
                 </li>
                 <li>
@@ -141,7 +142,7 @@ export default function Footer() {
                     href="/contact"
                     className="text-gray-600 hover:text-black transition-colors text-sm"
                   >
-                    Contact Us
+                      Contactez-nous
                   </Link>
                 </li>
                 <li>
@@ -149,7 +150,7 @@ export default function Footer() {
                     href="/safety"
                     className="text-gray-600 hover:text-black transition-colors text-sm"
                   >
-                    Safety
+                           Sécurité
                   </Link>
                 </li>
                 <li>
@@ -157,7 +158,7 @@ export default function Footer() {
                     href="/terms"
                     className="text-gray-600 hover:text-black transition-colors text-sm"
                   >
-                    Terms of Service
+                     Conditions d’utilisation
                   </Link>
                 </li>
                 <li>
@@ -165,7 +166,7 @@ export default function Footer() {
                     href="/privacy"
                     className="text-gray-600 hover:text-black transition-colors text-sm"
                   >
-                    Privacy Policy
+                     Politique de confidentialité
                   </Link>
                 </li>
               </ul>
@@ -177,20 +178,20 @@ export default function Footer() {
         <div className="py-4 border-t border-gray-300">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <p className="text-gray-500 text-xs">
-              © 2025 Covoiturage. All rights reserved.
+            © 2025 Covoiturage. Tous droits réservés.
             </p>
             <div className="flex items-center space-x-4 mt-2 md:mt-0">
               <Link
                 href="/terms"
                 className="text-gray-500 hover:text-black transition-colors text-xs"
               >
-                Terms
+                  Conditions
               </Link>
               <Link
                 href="/privacy"
                 className="text-gray-500 hover:text-black transition-colors text-xs"
               >
-                Privacy
+                     Confidentialité
               </Link>
               <Link
                 href="/cookies"

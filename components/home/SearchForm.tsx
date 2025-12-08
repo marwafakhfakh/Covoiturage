@@ -19,7 +19,7 @@ interface SearchFormProps {
 export default function SearchForm({
   onSearch,
   initialData = {},
-  title = "Find Your Perfect Ride",
+  title = "Trouvez votre trajet idéal",
   className = "",
 }: SearchFormProps) {
   const [searchForm, setSearchForm] = useState<SearchFormData>({
@@ -63,7 +63,7 @@ export default function SearchForm({
               {/* From (délégation / ville de départ) */}
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-black">
-                  From
+                De
                 </label>
                 <input
                   name="from"
@@ -78,7 +78,7 @@ export default function SearchForm({
               {/* To (délégation / ville d’arrivée) */}
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-black">
-                  To
+                Vers
                 </label>
                 <input
                   name="to"
@@ -93,7 +93,7 @@ export default function SearchForm({
               {/* Seats */}
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-black">
-                  Number of Seats
+                Nombre de places
                 </label>
                 <input
                   name="seats"
@@ -126,7 +126,7 @@ export default function SearchForm({
               type="submit"
               className="w-full py-4 bg-black text-white rounded-lg font-semibold text-lg hover:bg-gray-800 transition cursor-pointer"
             >
-              Search Rides
+              Rechercher des trajets
             </button>
           </form>
         </div>

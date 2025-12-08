@@ -35,8 +35,9 @@ function AdvantageItem({ icon, title, description }: AdvantageItemProps) {
 }
 
 function NewsletterCard({
-  title = "Join Our Newsletter",
-  description = "Get the latest updates, exclusive offers, and travel tips delivered to your inbox.",
+  title = "Rejoignez notre newsletter",
+  description = "Recevez les dernières nouveautés, offres exclusives et conseils de voyage directement dans votre boîte mail.",
+  
   onSubmit,
 }: {
   title?: string;
@@ -70,7 +71,7 @@ function NewsletterCard({
           type="submit"
           className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition font-semibold"
         >
-          Subscribe
+    S’abonner
         </button>
       </form>
     </div>
@@ -78,24 +79,25 @@ function NewsletterCard({
 }
 
 export default function AdvantagesSection({
-  title = "Our Advantages",
+  title = "Nos avantages",
   advantages = [
     {
       icon: "⚡",
-      title: "Instant Booking",
-      description: "Book your ride in seconds with our streamlined process",
+      title: "Réservation instantanée",
+      description: "Réservez votre trajet en quelques secondes grâce à notre processus simplifié",
     },
     {
       icon: "📱",
       title: "Mobile First",
-      description: "Optimized for mobile devices for on-the-go convenience",
+      description: "Optimisé pour les appareils mobiles pour plus de commodité en déplacement",
     },
     {
       icon: "💬",
-      title: "24/7 Support",
-      description: "Round-the-clock customer support for any issues",
+      title: "Support 24/7",
+      description: "Assistance client disponible à tout moment pour résoudre vos problèmes",
     },
   ],
+  
   newsletterTitle,
   newsletterDescription,
   onNewsletterSubmit,

@@ -25,29 +25,29 @@ function FeatureCard({ icon, title, description }: FeatureCardProps) {
 }
 
 export default function FeaturesSection({
-  title = "Why Choose Us?",
-  subtitle = "We're committed to making your travel experience safe, affordable, and enjoyable.",
+  title = "Pourquoi nous choisir ?",
+  subtitle = "Nous nous engageons à rendre votre expérience de voyage sûre, abordable et agréable.",
   features = [
     {
       icon: "🛡️",
-      title: "Safe & Secure",
-      description: "Verified drivers and secure payment system",
+      title: "Sûr & Sécurisé",
+      description: "Conducteurs vérifiés et système de paiement sécurisé",
     },
     {
       icon: "💰",
-      title: "Cost Effective",
-      description: "Save money by sharing travel costs",
+      title: "Économique",
+      description: "Économisez de l’argent en partageant les frais de voyage",
     },
     {
       icon: "🌱",
-      title: "Eco-Friendly",
-      description: "Reduce carbon footprint together",
+      title: "Écologique",
+      description: "Réduisez ensemble votre empreinte carbone",
     },
     {
       icon: "👥",
       title: "Social",
-      description: "Meet new people and make friends",
-    },
+      description: "Rencontrez de nouvelles personnes et faites-vous des amis",
+    }    
   ],
   backgroundColor = "bg-gray-50",
   className = "",

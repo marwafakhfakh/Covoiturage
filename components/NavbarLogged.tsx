@@ -71,7 +71,7 @@ export default function NavbarLogged({ user }: NavbarLoggedProps) {
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
-              Find Rides
+              Trouver un trajet
             </Link>
             <Link
               href="/offer"
@@ -90,7 +90,7 @@ export default function NavbarLogged({ user }: NavbarLoggedProps) {
                   d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                 />
               </svg>
-              Offer Ride
+              Proposer un trajet
             </Link>
             {/* User Name Display as Profile Link */}
             <Link
@@ -130,7 +130,7 @@ export default function NavbarLogged({ user }: NavbarLoggedProps) {
                   d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                 />
               </svg>
-              Sign Out
+              Se déconnecter
             </button>
 
           </div>

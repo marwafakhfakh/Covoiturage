@@ -12,12 +12,12 @@ interface CTAFooterProps {
 }
 
 export default function CTAFooter({
-  title = "Ready to Start Your Journey?",
-  description = "Join thousands of travelers who trust us for their carpooling needs. Safe, affordable, and reliable.",
-  primaryButtonText = "Find a Ride Now",
+  title = "Prêt à commencer votre voyage ?",
+  description = "Rejoignez des milliers de voyageurs qui nous font confiance pour leurs besoins en covoiturage. Sûr, abordable et fiable.",
+  primaryButtonText = "Trouver un trajet maintenant",
   primaryButtonHref = "/rides",
-  secondaryButtonText = "Start Offering Rides",
-  secondaryButtonHref = "/offer",
+  secondaryButtonText = "Proposer un trajet",
+  secondaryButtonHref = "/offer",  
   backgroundColor = "bg-gray-100",
   className = "",
 }: CTAFooterProps) {
