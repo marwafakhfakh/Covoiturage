@@ -87,7 +87,7 @@ function TripItem({ trip, type, onCancel, onEdit }: TripItemProps) {
           )}
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold text-gray-900">{trip.price}€</div>
+          <div className="text-lg font-bold text-gray-900">{trip.price} TND</div>
           {type === "reservation" && trip.seats && (
             <div className="text-sm text-gray-600">
               {trip.seats} seat{trip.seats !== 1 ? "s" : ""}
