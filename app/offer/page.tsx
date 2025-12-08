@@ -6,6 +6,7 @@ import api from "../../api/api";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store";
 import DelegationMap from "./DelegationMap";
+import { estimateDistanceKm } from "./DelegationMap";
 
 // Car and Service types
 type Car = {
@@ -41,6 +42,13 @@ export default function OfferRidePage() {
     services: [] as number[],
     description: "",
   });
+    const distanceKm =
+    form.departure_place && form.arrival_place
+      ? estimateDistanceKm(form.departure_place, form.arrival_place)
+      : 0;
+
+  const estimatedPrice = distanceKm * 0.1; // 0.100 TND / km
+
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ownedCars, setOwnedCars] = useState<Car[]>([]);
@@ -214,7 +222,7 @@ useEffect(() => {
                   </div>
                 </div>
               </FormSection> */}
-<FormSection title="Route Information">
+              <FormSection title="Route Information">
   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
     <DelegationMap
       selectedValue={form.departure_place}
@@ -230,7 +238,33 @@ useEffect(() => {
       delegations={delegations}
     />
   </div>
+
+  {distanceKm > 0 && (
+    <div className="mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-sm text-emerald-800">
+      Distance estimée : {distanceKm.toFixed(1)} km  
+      <br />
+      Montant estimé : {estimatedPrice.toFixed(3)} TND
+    </div>
+  )}
 </FormSection>
+
+{/* <FormSection title="Route Information">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <DelegationMap
+      selectedValue={form.departure_place}
+      onSelect={(value) => setForm({ ...form, departure_place: value })}
+      label="Lieu de départ"
+      delegations={delegations}
+    />
+
+    <DelegationMap
+      selectedValue={form.arrival_place}
+      onSelect={(value) => setForm({ ...form, arrival_place: value })}
+      label="Lieu d'arrivée"
+      delegations={delegations}
+    />
+  </div>
+</FormSection> */}
               {/* Trip Details Section */}
               <FormSection title="Trip Details">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

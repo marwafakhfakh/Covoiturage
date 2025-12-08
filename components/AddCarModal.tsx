@@ -1003,7 +1003,7 @@ export default function AddCarModal({
     data.append("nb_place", String(formData.nb_place));
     data.append("grey_card", formData.grey_card.trim());
     data.append("year", String(formData.year));
-    
+    data.append("is_active", "true");
     if (formData.image) {
       data.append("image", formData.image);
     }

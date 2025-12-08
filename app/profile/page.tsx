@@ -233,10 +233,7 @@ const handleAddCar = async (formData: CarFormData) => {
 
     const rawSerial = formData.serialNumber ?? "";
     const serial = String(rawSerial).toUpperCase().trim();
-    if (!serial) {
-      alert("La plaque (serialNumber) est obligatoire.");
-      return;
-    }
+
     data.append("serial_number", serial);
 
     data.append("nb_place", String(formData.seats ?? ""));

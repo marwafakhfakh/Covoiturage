@@ -16,7 +16,17 @@ const delegationCoordinates: Record<string, DelegationCoords> = {
   'Mahdia': { x: 60, y: 48, color: '#f59e0b' },
   'Sfax': { x: 55, y: 58, color: '#ef4444' }
 };
+export function estimateDistanceKm(from: string, to: string): number {
+  const a = delegationCoordinates[from];
+  const b = delegationCoordinates[to];
+  if (!a || !b) return 0;
 
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  const distPixels = Math.sqrt(dx * dx + dy * dy);
+  const kmPerPixel = 10; // à ajuster selon ton échelle
+  return distPixels * kmPerPixel;
+}
 interface DelegationMapProps {
   selectedValue: string;
   onSelect: (delegation: string) => void;
@@ -172,7 +182,6 @@ const DelegationMap: React.FC<DelegationMapProps> = ({
       {/* Debug info - à retirer en production */}
       {process.env.NODE_ENV === 'development' && (
         <div className="text-xs text-gray-500 mt-2">
-          Délégations disponibles: {delegations.map(d => d.name).join(', ')}
         </div>
       )}
     </div>
