@@ -22,7 +22,7 @@ export default function Footer() {
             />
           </Link>
           <p className="text-gray-600 mb-4 max-w-md text-sm">
-  Connecter les voyageurs à travers le monde. Partagez des trajets, économisez de l'argent,
+  Connecter les voyageurs à travers le monde. Partagez des trajets, économisez de l&apos;argent,
   et faites de nouvelles rencontres tout en réduisant votre empreinte carbone.
 </p>
 
@@ -134,7 +134,7 @@ export default function Footer() {
                     href="/help"
                     className="text-gray-600 hover:text-black transition-colors text-sm"
                   >
-                      Centre d’aide
+                      Centre d&apos;aide
                   </Link>
                 </li>
                 <li>
@@ -158,7 +158,7 @@ export default function Footer() {
                     href="/terms"
                     className="text-gray-600 hover:text-black transition-colors text-sm"
                   >
-                     Conditions d’utilisation
+                     Conditions d&apos;utilisation
                   </Link>
                 </li>
                 <li>

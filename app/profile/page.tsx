@@ -250,8 +250,9 @@ const handleAddCar = async (formData: CarFormData) => {
     });
 
     // construction de newCar…
-  } catch (err: any) {
-    console.error("❌ ERROR /api/cars/:", err.response?.data || err);
+  } catch (err: unknown) {
+    const error = err as any;
+    console.error(" ERROR /api/cars/:", error.response?.data || error);
   }
 };
 

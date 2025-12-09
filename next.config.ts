@@ -1,11 +1,6 @@
 import type { NextConfig } from "next";
-/** @type {import('next').NextConfig} */
-
-
-module.exports = nextConfig;
 
 const nextConfig: NextConfig = {
-  output: "export",
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "randomuser.me" },

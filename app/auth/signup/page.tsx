@@ -79,8 +79,10 @@ export default function SignUp() {
         receiveEmails: false,
         username: "",
       });
-    } catch (err: any) {
-      setError(err.response?.data?.detail || "Registration failed");
+    } catch (err: unknown) {
+      const error = err as any;
+      setError(error?.response?.data?.detail ||
+      Object.values(error?.response?.data || {}).flat().join(" ") || "Registration failed");
     } finally {
       setLoading(false);
     }

@@ -56,9 +56,10 @@ export default function Login() {
       const profileRes = await api.get("/api/auth/profile/");
       dispatch(setUser(profileRes.data));
       router.push("/rides");
-    } catch (err: any) {
-      console.error('❌ Login error:', err.response?.data);
-      setError(err.response?.data?.detail || "Login échoué");
+    } catch (err: unknown) {
+      const error = err as any; // cast local si besoin
+      console.error('❌ Login error:', error.response?.data);
+      setError(error.response?.data?.detail || "Login échoué");
     } finally {
       setLoading(false);
     }

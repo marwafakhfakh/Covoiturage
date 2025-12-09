@@ -85,7 +85,9 @@ export default function RideDetailPage({
   if (error || !ride) return notFound();
 
   // Check if current user is the owner of the ride
-  const isRideOwner = currentUser && ride.user?.id === currentUser.id;
+  //const isRideOwner = currentUser && ride.user?.id === currentUser.id;
+  const isRideOwner = !!(currentUser && ride && ride.user?.id === currentUser.id);
+
 
   const renderStars = (rating: number) => {
     const stars = [];
