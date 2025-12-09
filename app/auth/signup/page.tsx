@@ -26,7 +26,7 @@ export default function SignUp() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  //const [success, setSuccess] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -36,10 +36,10 @@ export default function SignUp() {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
-    setSuccess(false);
+    //setSuccess(false);
 
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
@@ -79,11 +79,19 @@ export default function SignUp() {
         receiveEmails: false,
         username: "",
       });
-    } catch (err: unknown) {
-      const error = err as any;
-      setError(error?.response?.data?.detail ||
-      Object.values(error?.response?.data || {}).flat().join(" ") || "Registration failed");
-    } finally {
+    } catch (err) {
+  console.error('❌ Registration error:', err);
+  if (err && typeof err === 'object' && 'response' in err) {
+    const error = err as { response?: { data?: { detail?: string; [key: string]: unknown } } };
+    const detail = error.response?.data?.detail;
+    const allErrors = error.response?.data 
+      ? Object.values(error.response.data).flat().join(" ")
+      : "";
+    setError(detail || allErrors || "Registration failed");
+  } else {
+    setError("Registration failed");
+  }}
+ finally {
       setLoading(false);
     }
   };

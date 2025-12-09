@@ -7,55 +7,95 @@ import type { UserState } from "../../store/userSlice";
 import ProfileCard from "../../components/profile/ProfileCard";
 import TripsSection from "../../components/profile/TripsSection";
 import CarsSection from "../../components/profile/CarsSection";
-import AddCarModal from "../../components/AddCarModal";
 import { Car } from "../../components/profile/CarCard";
+import AddCarModal, { CarFormData } from "../../components/AddCarModal";
 
 interface RootState {
   user: UserState;
 }
 
 // Même shape que dans AddCarModal
-interface CarFormData {
-  model: string;
-  vehicle_type: string;
-  color: string;
-  serialNumber: string;
-  seats: number;
-  engine_type: string;
-  greyCard: string;
-  year: number;
-  image: File | null;
-}
+// interface CarFormData {
+//   model: string;
+//   vehicle_type: string;
+//   color: string;
+//   serialNumber: string;
+//   seats: number;
+//   engine_type: string;
+//   greyCard: string;
+//   year: number;
+//   image: File | null;
+// }
 
 export default function ProfilePage() {
   const user = useSelector((state: RootState) => state.user.user);
   const [ownedCars, setOwnedCars] = useState<Car[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [offeredRides, setOfferedRides] = useState<any[]>([]);
-  const [reservations, setReservations] = useState<any[]>([]);
+interface OfferedRide {
+  id: number;
+  from: string;
+  to: string;
+  date: string;
+  price: string;
+  seats: number;
+  seatsAvailable: number;
+  status: string;
+}
 
+const [offeredRides, setOfferedRides] = useState<OfferedRide[]>([]);
+  // const [reservations, setReservations] = useState<any[]>([]);
+interface Reservation {
+  id: number;
+  from: string;
+  to: string;
+  date: string;
+  driver: string;
+  price: string;
+  status: string;
+  seats: number;
+}
+
+const [reservations, setReservations] = useState<Reservation[]>([]);
   // Réservations
   useEffect(() => {
     async function fetchReservations() {
       try {
         const res = await api.get("/api/reservations/");
         const data = Array.isArray(res.data) ? res.data : [];
-        const mapped = data.map((item: any) => {
-          const post = item.post;
-          return {
-            id: item.id,
-            from: post?.departure_place || "-",
-            to: post?.arrival_place || "-",
-            date: post?.departure_date || "-",
-            driver:
-              post?.user?.first_name && post?.user?.last_name
-                ? `${post.user.first_name} ${post.user.last_name}`
-                : post?.user?.username || "-",
-            price: post?.price ? post.price.toString() : "-",
-            status: item.status,
-            seats: item.nb_place,
-          };
-        });
+        // const mapped = data.map((item: any) => {
+        //   const post = item.post;
+        //   return {
+        //     id: item.id,
+        //     from: post?.departure_place || "-",
+        //     to: post?.arrival_place || "-",
+        //     date: post?.departure_date || "-",
+        //     driver:
+        //       post?.user?.first_name && post?.user?.last_name
+        //         ? `${post.user.first_name} ${post.user.last_name}`
+        //         : post?.user?.username || "-",
+        //     price: post?.price ? post.price.toString() : "-",
+        //     status: item.status,
+        //     seats: item.nb_place,
+        //   };
+        // });
+        const mapped = data.map((item: Record<string, unknown>) => {
+  const post = item.post as Record<string, unknown> | undefined;
+  const postUser = post?.user as Record<string, unknown> | undefined;
+  
+  return {
+    id: item.id as number,
+    from: (post?.departure_place as string) || "-",
+    to: (post?.arrival_place as string) || "-",
+    date: (post?.departure_date as string) || "-",
+    driver:
+      postUser?.first_name && postUser?.last_name
+        ? `${postUser.first_name} ${postUser.last_name}`
+        : (postUser?.username as string) || "-",
+    price: post?.price ? (post.price as number).toString() : "-",
+    status: item.status as string,
+    seats: item.nb_place as number,
+  };
+});
         setReservations(mapped);
         console.log("Fetched reservations:", mapped);
       } catch (err) {
@@ -71,16 +111,30 @@ export default function ProfilePage() {
       try {
         const res = await api.get("/api/myPosts/");
         const data = res.data;
-        const rides = (Array.isArray(data) ? data : []).map((item: any) => ({
-          id: item.id,
-          from: item.departure_place,
-          to: item.arrival_place,
-          date: item.departure_date,
-          price: item.price,
-          seats: item.car?.nb_place ?? 0,
-          seatsAvailable: item.nb_places_disponible ?? 0,
-          status: item.status,
-        }));
+        // const rides = (Array.isArray(data) ? data : []).map((item: any) => ({
+        //   id: item.id,
+        //   from: item.departure_place,
+        //   to: item.arrival_place,
+        //   date: item.departure_date,
+        //   price: item.price,
+        //   seats: item.car?.nb_place ?? 0,
+        //   seatsAvailable: item.nb_places_disponible ?? 0,
+        //   status: item.status,
+        // }));
+        const rides = (Array.isArray(data) ? data : []).map((item: Record<string, unknown>) => {
+  const car = item.car as Record<string, unknown> | undefined;
+  
+  return {
+    id: item.id as number,
+    from: item.departure_place as string,
+    to: item.arrival_place as string,
+    date: item.departure_date as string,
+    price: item.price as string,
+    seats: (car?.nb_place as number) ?? 0,
+    seatsAvailable: (item.nb_places_disponible as number) ?? 0,
+    status: item.status as string,
+  };
+});
         setOfferedRides(rides);
       } catch (err) {
         console.error("Failed to fetch offered rides", err);
@@ -119,18 +173,25 @@ export default function ProfilePage() {
       const res = await api.get("/api/cars/");
       const data = Array.isArray(res.data) ? res.data : [];
       
-      const cars: Car[] = data.map((item: any) => ({
-        id: item.id,
-        // ✅ UTILISER LES DETAILS NESTED
-        brand: item.model_details?.brand?.name || "",
-        model: item.model_details?.name || "",
-        year: item.year?.toString() || "",
-        color: item.color_details?.name || "",
-        seats: item.nb_place || 0,
-        fuelType: item.engine_type_details?.name || "",
-        licensePlate: item.serial_number || "",
-        image: item.image || "",
-      }));
+      // ✅ Remplacer `any` par un type explicite
+      const cars: Car[] = data.map((item: Record<string, unknown>) => {
+        const modelDetails = item.model_details as Record<string, unknown> | undefined;
+        const brandDetails = modelDetails?.brand as Record<string, unknown> | undefined;
+        const colorDetails = item.color_details as Record<string, unknown> | undefined;
+        const engineTypeDetails = item.engine_type_details as Record<string, unknown> | undefined;
+        
+        return {
+          id: item.id as number,
+          brand: (brandDetails?.name as string) || "",
+          model: (modelDetails?.name as string) || "",
+          year: item.year ? String(item.year) : "",
+          color: (colorDetails?.name as string) || "",
+          seats: (item.nb_place as number) || 0,
+          fuelType: (engineTypeDetails?.name as string) || "",
+          licensePlate: (item.serial_number as string) || "",
+          image: (item.image as string) || "",
+        };
+      });
       
       setOwnedCars(cars);
       console.log("✅ Voitures chargées:", cars);
@@ -141,6 +202,34 @@ export default function ProfilePage() {
   
   fetchCars();
 }, []);
+//   useEffect(() => {
+//   async function fetchCars() {
+//     try {
+//       const res = await api.get("/api/cars/");
+//       const data = Array.isArray(res.data) ? res.data : [];
+      
+//       const cars: Car[] = data.map((item: any) => ({
+//         id: item.id,
+//         // ✅ UTILISER LES DETAILS NESTED
+//         brand: item.model_details?.brand?.name || "",
+//         model: item.model_details?.name || "",
+//         year: item.year?.toString() || "",
+//         color: item.color_details?.name || "",
+//         seats: item.nb_place || 0,
+//         fuelType: item.engine_type_details?.name || "",
+//         licensePlate: item.serial_number || "",
+//         image: item.image || "",
+//       }));
+      
+//       setOwnedCars(cars);
+//       console.log("✅ Voitures chargées:", cars);
+//     } catch (err) {
+//       console.error("❌ Erreur fetch cars:", err);
+//     }
+//   }
+  
+//   fetchCars();
+// }, []);
 
 
   // ✅ Création de voiture côté backend + MAJ state
@@ -227,35 +316,59 @@ const handleAddCar = async (formData: CarFormData) => {
       return;
     }
 
+    // data.append("model", String(modelId));
+    // data.append("vehicle_type", String(vehicleTypeId));
+    // data.append("color", String(colorId));
+
+    // const rawSerial = formData.serialNumber ?? "";
+    // const serial = String(rawSerial).toUpperCase().trim();
+
+    // data.append("serial_number", serial);
+
+    // data.append("nb_place", String(formData.seats ?? ""));
+    // data.append("engine_type", String(engineTypeId));
+    // data.append("grey_card", formData.greyCard || "");
+    // data.append("year", formData.year ? String(formData.year) : "");
     data.append("model", String(modelId));
-    data.append("vehicle_type", String(vehicleTypeId));
-    data.append("color", String(colorId));
+  data.append("vehicle_type", String(vehicleTypeId));
+  data.append("color", String(colorId));
 
-    const rawSerial = formData.serialNumber ?? "";
-    const serial = String(rawSerial).toUpperCase().trim();
+  const serial = (formData.serial_number ?? "").toUpperCase().trim();
+  data.append("serial_number", serial);
 
-    data.append("serial_number", serial);
-
-    data.append("nb_place", String(formData.seats ?? ""));
-    data.append("engine_type", String(engineTypeId));
-    data.append("grey_card", formData.greyCard || "");
-    data.append("year", formData.year ? String(formData.year) : "");
+  data.append("nb_place", String(formData.nb_place ?? ""));
+  data.append("engine_type", String(engineTypeId));
+  data.append("grey_card", formData.grey_card || "");
+  data.append("year", formData.year ? String(formData.year) : "");
     if (formData.image) data.append("image", formData.image);
 
     console.log("🚗 FormData envoyée:");
     for (const [k, v] of data.entries()) console.log(k, v);
 
-    const res = await api.post("/api/cars/", data, {
+      const res = await api.post("/api/cars/", data, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
+
     // construction de newCar…
-  } catch (err: unknown) {
-    const error = err as any;
-    console.error(" ERROR /api/cars/:", error.response?.data || error);
+  } catch (err) {  // ✅ CORRECTION LIGNE 342: Supprimer : any
+    console.error("❌ ERROR /api/cars/:", err);
+    
+    // ✅ Typage correct pour gérer l'erreur
+    const error = err as { response?: { data?: Record<string, unknown> } };
+    
+    // if (error.response?.data) {
+    //   const errors = error.response.data;
+    //   let msg = "Erreurs:\n";
+    //   for (const [field, errorMsg] of Object.entries(errors)) {
+    //     msg += `${field}: ${Array.isArray(errorMsg) ? errorMsg[0] : errorMsg}\n`;
+    //   }
+    //   alert(msg);
+    // } else {
+    //   alert("Erreur serveur lors de la création de la voiture.");
+    // }
   }
 };
-
 
 //   const handleAddCar = async (formData: CarFormData) => {
 //   if (!user?.id) {
@@ -330,7 +443,7 @@ const handleAddCar = async (formData: CarFormData) => {
   const handleCancelReservation = async (tripId: number) => {
     try {
       await api.put(`/api/reservations/${tripId}/`, { status: "canceled" });
-      setReservations((prev: any[]) =>
+setReservations((prev) =>
         prev.map((r) => (r.id === tripId ? { ...r, status: "canceled" } : r))
       );
     } catch (err) {
@@ -341,7 +454,7 @@ const handleAddCar = async (formData: CarFormData) => {
   const handleCancelOfferedRide = async (tripId: number) => {
     try {
       await api.put(`/api/posts/${tripId}/`, { status: "canceled" });
-      setOfferedRides((prev: any[]) =>
+setOfferedRides((prev) =>
         prev.map((r) => (r.id === tripId ? { ...r, status: "canceled" } : r))
       );
     } catch (err) {

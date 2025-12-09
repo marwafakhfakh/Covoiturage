@@ -7,10 +7,15 @@ import FormSection from "../../components/offer/FormSection";
 import SuccessMessage from "../../components/common/SuccessMessage";
 import api from "../../api/api";
 import type { RootState } from "../../store";
+import dynamic from "next/dynamic";               // ✅ ajouté
+
 // import DelegationMap, { Delegation } from "./DelegationMap";
 // import DelegationMapLeaflet, { Delegation } from "./DelegationMapLeaflet";
 
-import RouteMapLeaflet from "./RouteMapLeaflet";
+// import RouteMapLeaflet from "./RouteMapLeaflet";
+const RouteMapLeaflet = dynamic(() => import("./RouteMapLeaflet"), {
+  ssr: false,
+});
 import type { Delegation } from "./DelegationMapLeaflet";
 
 
@@ -48,6 +53,7 @@ type OfferForm = {
 };
 
 export default function OfferRidePage() {
+  
   const user = useSelector((state: RootState) => state.user.user);
 
   const [form, setForm] = useState<OfferForm>({
@@ -69,8 +75,8 @@ export default function OfferRidePage() {
   const [loading, setLoading] = useState(true);
 
   // Pour l’instant on ne recalcule pas la distance avec lat/lng
-  const distanceKm = 0;
-  const estimatedPrice = 0;
+  // const distanceKm = 0;
+  // const estimatedPrice = 0;
 
   useEffect(() => {
     async function fetchData() {
@@ -123,7 +129,7 @@ export default function OfferRidePage() {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
 
@@ -140,23 +146,28 @@ export default function OfferRidePage() {
         services: form.services,
       });
       setSuccess(true);
-    } catch (err: any) {
-      setError(
-        err?.response?.data?.detail ||
-          Object.values(err?.response?.data || {}).flat().join(" ") ||
-          "An error occurred while publishing your ride."
-      );
-    }
+    } catch (err) {
+      console.error('❌ Error publishing ride:', err);
+      if (err && typeof err === 'object' && 'response' in err) {
+        const error = err as { response?: { data?: { detail?: string; [key: string]: unknown } } };
+        const detail = error.response?.data?.detail;
+        const allErrors = error.response?.data 
+          ? Object.values(error.response.data).flat().join(" ")
+          : "";
+        setError(detail || allErrors || "An error occurred while publishing your ride.");
+      } else {
+        setError("An error occurred while publishing your ride.");
+      }}
   };
 
   const selectedCar = ownedCars.find(
     (car) => car.id === parseInt(form.selected_car_id)
   );
 
-  const [departureQuery, setDepartureQuery] = useState("");
+   //const [departureQuery] = useState('');
 
-  const filteredDepartureDelegations = delegations.filter((d) => d.name.toLowerCase().includes(departureQuery.toLowerCase())
-  );
+  // const filteredDepartureDelegations = delegations.filter((d) => d.name.toLowerCase().includes(departureQuery.toLowerCase())
+  // );
 
 
   return (

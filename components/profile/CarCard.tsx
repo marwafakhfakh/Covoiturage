@@ -4,7 +4,7 @@ export interface Car {
   id: number;
   brand: string;
   model: string;
-  year: number;
+  year: number | string; // ✅ Accepte number OU string
   color: string;
   seats: number;
   fuelType: string;

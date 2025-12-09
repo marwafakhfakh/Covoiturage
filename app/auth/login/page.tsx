@@ -32,7 +32,7 @@ export default function Login() {
       [name]: type === "checkbox" ? checked : value,
     });
   };
-  const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
@@ -57,9 +57,10 @@ export default function Login() {
       dispatch(setUser(profileRes.data));
       router.push("/rides");
     } catch (err: unknown) {
-      const error = err as any; // cast local si besoin
-      console.error('❌ Login error:', error.response?.data);
-      setError(error.response?.data?.detail || "Login échoué");
+  console.error('❌ Login error:', err);
+  const errorMessage = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail || "Login échoué";
+  setError(errorMessage);
+
     } finally {
       setLoading(false);
     }
