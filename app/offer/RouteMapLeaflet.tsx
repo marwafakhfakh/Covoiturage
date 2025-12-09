@@ -145,8 +145,13 @@ export default function RouteMapLeaflet({
       </div>
 
       {hasBoth && (
-        <div className="text-sm text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
-          Distance estimée : {distanceKm.toFixed(1)} km
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mt-2">
+            <div className="text-sm text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
+            Distance estimée : {distanceKm.toFixed(1)} km
+            </div>
+            <div className="text-xs md:text-sm text-gray-600">
+            <b>Prix recommandé: </b>[Entre 0.2 - 0.3] TND/Km dans la même ville | Au Forfait [entre 10 - 25] TND entre les villes.
+            </div>
         </div>
       )}
     </div>

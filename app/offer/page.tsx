@@ -353,7 +353,7 @@ export default function OfferRidePage() {
                       </option>
                       {ownedCars.map((car) => (
                         <option key={car.id} value={car.id.toString()}>
-                          {car.model?.name || "Unknown Model"} ({car.year || "-"})
+                          {car.model?.name || "Voiture "} ({car.year || "-"})
                           {" - "}
                           {car.color} - {car.serial_number}
                         </option>

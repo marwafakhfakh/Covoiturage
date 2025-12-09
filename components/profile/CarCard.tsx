@@ -40,7 +40,7 @@ export default function CarCard({
           width={400}
           height={225}
           className="w-full h-full object-cover"
-        /> */}
+        /> */{"}"}
       </div>
 
       <div className="space-y-3">

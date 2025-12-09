@@ -244,12 +244,12 @@ export default function RidesPage() {
   <SearchForm
     initialData={searchParams}
     onSearch={handleSearch}
-    title="Find Your Perfect Ride"
+    title="Trouver le meilleur trajet pour vous"
     className="pt-4 pb-0"
   />
 
       <PageHeader
-        title="Available Rides"
+        title="Trajets disponibles"
         searchInfo={searchParams}
         resultCount={filteredRides.length}
       />
@@ -269,7 +269,7 @@ export default function RidesPage() {
 
           <div className="flex-1">
             {loading ? (
-              <div className="text-center py-8">Loading rides...</div>
+              <div className="text-center py-8">Charrgement des trajets...</div>
             ) : paginatedRides.length > 0 ? (
               <div className="space-y-4">
                 {paginatedRides.map((ride) => (
@@ -287,7 +287,7 @@ export default function RidesPage() {
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1 || loading}
                 >
-                  Previous
+                  Précédent
                 </button>
                 <span>
                   Page {currentPage} of {totalPages}
@@ -297,7 +297,7 @@ export default function RidesPage() {
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages || loading}
                 >
-                  Next
+                  Suivant
                 </button>
               </div>
             )}
