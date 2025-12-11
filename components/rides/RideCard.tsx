@@ -44,7 +44,9 @@ export interface RideData {
   }[];
   departure_date: string;
   departure_place: string;
+  departure_city?: string; // Nom de la ville de départ
   arrival_place: string;
+  arrival_city?: string; // Nom de la ville d'arrivée
   status: string;
   nb_places_disponible: number;
   price: string;
@@ -86,6 +88,13 @@ function renderStars(rating: number) {
 }
 
 export default function RideCard({ ride, className = "" }: RideCardProps) {
+  //  const departure = new Date(ride.departure_date);
+  // const now = new Date();
+  //   const FOUR_HOURS_MS = 4 * 60 * 60 * 1000;
+
+  // if (now.getTime() - departure.getTime() > FOUR_HOURS_MS) {
+  //   return null;
+  // }
   // Driver info
   const user = ride.user;
   const name =
@@ -149,12 +158,30 @@ export default function RideCard({ ride, className = "" }: RideCardProps) {
           {/* Route */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-2">
-              <div className="text-xl font-bold text-gray-900">
-                {ride.departure_place}
+              {/* Départ */}
+              <div className="flex flex-col">
+                <div className="text-xl font-bold text-gray-900">
+                  {ride.departure_place}
+                </div>
+                {ride.departure_city && (
+                  <div className="text-xs text-gray-500 mt-0.5">
+                    {ride.departure_city}
+                  </div>
+                )}
               </div>
-              <div className="text-gray-400">→</div>
-              <div className="text-xl font-bold text-gray-900">
-                {ride.arrival_place}
+
+              <div className="text-gray-400 text-2xl">→</div>
+
+              {/* Arrivée */}
+              <div className="flex flex-col">
+                <div className="text-xl font-bold text-gray-900">
+                  {ride.arrival_place}
+                </div>
+                {ride.arrival_city && (
+                  <div className="text-xs text-gray-500 mt-0.5">
+                    {ride.arrival_city}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -165,11 +192,14 @@ export default function RideCard({ ride, className = "" }: RideCardProps) {
                 month: "short",
                 day: "numeric",
                 year: "numeric",
-              })}{" "}
-              at{" "}
+                  timeZone: "UTC",          // empêche l’ajout de +1h
+  })}{" "}
+  at{" "}
               {new Date(ride.departure_date).toLocaleTimeString("en-US", {
                 hour: "2-digit",
                 minute: "2-digit",
+                    timeZone: "UTC",          // affiche l’heure telle que stockée
+
               })}
             </div>
 

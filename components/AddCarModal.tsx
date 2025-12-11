@@ -360,7 +360,7 @@ export default function AddCarModal({
                 {/* Model */}
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Car Model * <span className="text-xs text-gray-500">(ID: {formData.model || "none"})</span>
+                    Car Model * <span className="text-xs text-gray-500"></span>
                   </label>
                   <select
                     required
@@ -374,7 +374,7 @@ export default function AddCarModal({
                     <option value="">-- Select a model --</option>
                     {models.map((model) => (
                       <option key={model.id} value={model.id}>
-                        {getBrandName(model.brand)} {model.name} (ID: {model.id})
+                        {getBrandName(model.brand)} {model.name}
                       </option>
                     ))}
                   </select>
@@ -383,7 +383,7 @@ export default function AddCarModal({
                 {/* Vehicle Type */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Vehicle Type * <span className="text-xs text-gray-500">(ID: {formData.vehicle_type || "none"})</span>
+                    Vehicle Type * <span className="text-xs text-gray-500"></span>
                   </label>
                   <select
                     required
@@ -403,7 +403,7 @@ export default function AddCarModal({
                 {/* Color */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Color * <span className="text-xs text-gray-500">(ID: {formData.color || "none"})</span>
+                    Color * <span className="text-xs text-gray-500"></span>
                   </label>
                   <select
                     required
@@ -429,7 +429,7 @@ export default function AddCarModal({
                     value={formData.serial_number}
                     onChange={(e) => setFormData({ ...formData, serial_number: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-                    placeholder="e.g., ABC123XYZ789"
+                    placeholder="110 TUN 3000"
                   />
                 </div>
 
@@ -451,7 +451,7 @@ export default function AddCarModal({
                 {/* Engine Type */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Engine Type * <span className="text-xs text-gray-500">(ID: {formData.engine_type || "none"})</span>
+                    Engine Type * <span className="text-xs text-gray-500"></span>
                   </label>
                   <select
                     required
