@@ -24,9 +24,17 @@ export interface RideData {
   };
   car: {
     id: number;
-    model: { id: number; name: string; brand: number };
-    type: string;
+  model_details?: {
+    id: number;
+    name: string;
+    brand: {
+      id: number;
+      name: string;
+    };
+  },    type: string;
     color: string;
+      color_details?: { id: number; name: string; code: string } | null;
+
     serial_number: string;
     nb_place: number;
     engine_type: string;
@@ -109,9 +117,9 @@ export default function RideCard({ ride, className = "" }: RideCardProps) {
 
   // Car info
   const car = ride.car;
-  const carName = car.model?.name
-    ? `${car.model.name} (${car.type}, ${car.color})`
-    : `${car.type}, ${car.color}`;
+  const carName = car.model_details?.brand.name
+    ? `${car.model_details.name} (${car.type}, ${car.color_details?.name})`
+    : `${car.type}, ${car.color_details?.name}`;
 
   // Services
   const services = ride.services.map((s) => s.name);

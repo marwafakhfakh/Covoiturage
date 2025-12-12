@@ -63,6 +63,8 @@ export default function SignUp() {
         password_confirm: formData.confirmPassword,
         first_name: formData.firstName,
         last_name: formData.lastName,
+        phone_number: formData.phone,  // ← Ajoutez cette ligne
+
       };
      // await api.post("/api/auth/register/", body);
       await api.post("/api/auth/register/", body);

@@ -162,12 +162,12 @@ export default function ProfileCard({
           {/* Show active status */}
           <span
             className={`px-2 py-1 text-xs rounded ${
-              user.active
+              user.is_active
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
             }`}
           >
-            {user.active ? "Active" : "Inactive"}
+            {user.is_active ? "Active" : "Inactive"}
           </span>
         </div>
       </div>
