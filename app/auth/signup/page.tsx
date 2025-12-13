@@ -100,9 +100,10 @@ export default function SignUp() {
 
   return (
     <AuthLayout
-      title="Create your account"
-      subtitle="Join our community and start sharing rides today"
-    >
+  title="Créez votre compte"
+  subtitle="Rejoignez notre communauté et commencez à partager vos trajets dès aujourd'hui"
+>
+
       {/* Sign Up Form */}
       <AuthCard>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -114,7 +115,6 @@ export default function SignUp() {
               id="username"
               name="username"
               label="Username"
-              placeholder="john_doe21"
               value={formData.username}
               onChange={handleChange}
               required={false}
@@ -122,8 +122,7 @@ export default function SignUp() {
             <FormField
               id="firstName"
               name="firstName"
-              label="First name"
-              placeholder="John"
+              label="Prenom"
               value={formData.firstName}
               onChange={handleChange}
               required
@@ -131,8 +130,7 @@ export default function SignUp() {
             <FormField
               id="lastName"
               name="lastName"
-              label="Last name"
-              placeholder="Doe"
+              label="Nom"
               value={formData.lastName}
               onChange={handleChange}
               required
@@ -143,8 +141,7 @@ export default function SignUp() {
             id="email"
             name="email"
             type="email"
-            label="Email address"
-            placeholder="john.doe@example.com"
+            label="Adresse e-mail"
             value={formData.email}
             onChange={handleChange}
             autoComplete="email"
@@ -155,8 +152,7 @@ export default function SignUp() {
             id="phone"
             name="phone"
             type="tel"
-            label="Phone number"
-            placeholder="+1 (555) 123-4567"
+            label="Numero de téléphone"
             value={formData.phone}
             onChange={handleChange}
             required
@@ -166,7 +162,6 @@ export default function SignUp() {
             id="password"
             name="password"
             label="Password"
-            placeholder="Create a strong password"
             value={formData.password}
             onChange={handleChange}
             autoComplete="new-password"
@@ -177,7 +172,6 @@ export default function SignUp() {
             id="confirmPassword"
             name="confirmPassword"
             label="Confirm password"
-            placeholder="Confirm your password"
             value={formData.confirmPassword}
             onChange={handleChange}
             autoComplete="new-password"
@@ -186,28 +180,29 @@ export default function SignUp() {
 
           {/* Checkboxes */}
           <div className="space-y-4">
-            <CheckboxField
-              id="agreeToTerms"
-              name="agreeToTerms"
-              checked={formData.agreeToTerms}
-              onChange={handleChange}
-              required
-            >
-              I agree to the{" "}
-              <Link
-                href="/terms"
-                className="text-black hover:text-gray-700 font-medium"
-              >
-                Terms of Service
-              </Link>{" "}
-              and{" "}
-              <Link
-                href="/privacy"
-                className="text-black hover:text-gray-700 font-medium"
-              >
-                Privacy Policy
-              </Link>
-            </CheckboxField>
+           <CheckboxField
+  id="agreeToTerms"
+  name="agreeToTerms"
+  checked={formData.agreeToTerms}
+  onChange={handleChange}
+  required
+>
+  J'accepte les{" "}
+  <Link
+    href="/terms"
+    className="text-black hover:text-gray-700 font-medium"
+  >
+    Conditions d'utilisation
+  </Link>{" "}
+  et la{" "}
+  <Link
+    href="/privacy"
+    className="text-black hover:text-gray-700 font-medium"
+  >
+    Politique de confidentialité
+  </Link>
+</CheckboxField>
+
 
             <CheckboxField
               id="receiveEmails"
@@ -215,7 +210,7 @@ export default function SignUp() {
               checked={formData.receiveEmails}
               onChange={handleChange}
             >
-              I want to receive email updates about new features and offers
+  Je souhaite recevoir des emails concernant les nouvelles fonctionnalités et les offres
             </CheckboxField>
           </div>
 
@@ -230,12 +225,12 @@ export default function SignUp() {
       {/* Sign In Link */}
       <div className="text-center">
         <p className="text-gray-600">
-          Already have an account?{" "}
+  Vous avez déjà un compte ?{" "}
           <Link
             href="/auth/login"
             className="font-medium text-black hover:text-gray-700"
           >
-            Sign in here
+    Connectez-vous ici
           </Link>
         </p>
       </div>

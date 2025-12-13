@@ -6,6 +6,7 @@ import ReduxProvider from "../store/ReduxProvider";
 import UserProfileLoader from "../components/UserProfileLoader";
 import Footer from "../components/Footer";
 import "leaflet/dist/leaflet.css";
+import InstallPWA from "@/components/InstallPWA";
 
 
 
@@ -22,6 +23,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "نملة  NAMLAA application de covoiturage légal et sécurisé",
   description: "Application de partage de trajets entre citoyens écologique et durable",
+  manifest: "/manifest.json",
+  themeColor: "#f97316",
 };
 
 export default function RootLayout({
@@ -34,12 +37,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black min-h-screen flex flex-col`}
       >
-     
-      
+             
 
         <ReduxProvider>
           <UserProfileLoader>
             <NavbarApp />
+            <InstallPWA />
             <main>{children}</main>
             <Footer />
           </UserProfileLoader>

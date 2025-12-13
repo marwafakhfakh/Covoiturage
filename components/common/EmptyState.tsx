@@ -11,10 +11,10 @@ interface EmptyStateProps {
 
 export default function EmptyState({
   icon = "🚗",
-  title = "No rides found",
-  description = "Try adjusting your search criteria or check back later for new rides.",
-  actionText = "Offer a Ride Instead",
-  actionHref = "/offer",
+title = "Rejoignez Namlaa pour continuer",
+description = "Veuillez vous inscrire pour continuer et accéder à toutes les fonctionnalités.",
+actionText = "S’inscrire",
+actionHref = "/auth/signup",
   className = "",
 }: EmptyStateProps) {
   return (

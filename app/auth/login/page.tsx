@@ -67,7 +67,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   };
   
   return (
-    <AuthLayout title="Welcome back" subtitle="Sign in to your account">
+    <AuthLayout title="bienvenue" subtitle="Connectez-vous à votre compte">
       <AuthCard>
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && <div className="text-red-500 text-sm">{error}</div>}
@@ -75,8 +75,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             id="email"
             name="email"
             type="email"
-            label="Email address"
-            placeholder="Enter your email"
+            label="Adresse email"
+placeholder="Entrez votre email"
             value={formData.email}
             onChange={handleChange}
             autoComplete="email"
@@ -85,8 +85,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           <PasswordField
             id="password"
             name="password"
-            label="Password"
-            placeholder="Enter your password"
+            label=" Mot de passe"
+placeholder="Entrez votre mot de passe"
             value={formData.password}
             onChange={handleChange}
             autoComplete="current-password"
@@ -99,13 +99,13 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               checked={formData.rememberMe}
               onChange={handleChange}
             >
-              Remember me
+  Se souvenir de moi
             </CheckboxField>
             <Link
               href="/auth/forgot-password"
               className="text-sm text-black hover:text-gray-700 font-medium"
             >
-              Forgot password?
+  Mot de passe oublié ?
             </Link>
           </div>
           <AuthButton type="submit" disabled={loading}>
