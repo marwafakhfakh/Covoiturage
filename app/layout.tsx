@@ -7,6 +7,7 @@ import UserProfileLoader from "../components/UserProfileLoader";
 import Footer from "../components/Footer";
 import "leaflet/dist/leaflet.css";
 import InstallPWA from "@/components/InstallPWA";
+import RegisterSW from "@/components/RegisterSW";
 
 
 
@@ -41,6 +42,7 @@ export default function RootLayout({
 
         <ReduxProvider>
           <UserProfileLoader>
+            <RegisterSW />
             <NavbarApp />
             <InstallPWA />
             <main>{children}</main>

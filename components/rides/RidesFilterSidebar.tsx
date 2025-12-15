@@ -87,7 +87,7 @@ export default function RidesFilterSidebar({
           </div>
         </div>
 
-        {/* Departure Time Range Filter */}
+        {/* Departure    Time Range Filter */}
         <div className="mb-6">
           <h3 className="text-sm font-semibold text-gray-700 mb-3">
             Departure Time

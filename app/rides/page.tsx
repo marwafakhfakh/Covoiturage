@@ -635,57 +635,60 @@ export default function RidesPage() {
       />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex gap-8">
-          <RidesFilterSidebar
-            filters={filters}
-            onSortChange={handleSortChange}
-            onServiceFilter={handleServiceFilter}
-            onClearFilters={handleClearFilters}
-            onDepartureTimeRangeChange={handleDepartureTimeRangeChange}
-            availableServices={
-              availableServices.length > 0 ? availableServices : undefined
-            }
-          />
+  <div className="flex flex-col md:flex-row gap-8">
+    {/* Filtres */}
+    <div className="w-full md:w-1/3 lg:w-1/4">
+      <RidesFilterSidebar
+        filters={filters}
+        onSortChange={handleSortChange}
+        onServiceFilter={handleServiceFilter}
+        onClearFilters={handleClearFilters}
+        onDepartureTimeRangeChange={handleDepartureTimeRangeChange}
+        availableServices={
+          availableServices.length > 0 ? availableServices : undefined
+        }
+      />
+    </div>
 
-          <div className="flex-1">
-            {loading ? (
-              <div className="text-center py-8">
-                Chargement des trajets...
-              </div>
-            ) : paginatedRides.length > 0 ? (
-              <div className="space-y-4">
-                {paginatedRides.map((ride) => (
-                  <RideCard key={ride.id} ride={ride} />
-                ))}
-              </div>
-            ) : (
-              <EmptyState />
-            )}
-
-            {filteredRides.length > 0 && (
-              <div className="flex justify-center items-center gap-4 mt-8">
-                <button
-                  className="px-4 py-2 border rounded disabled:opacity-50"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1 || loading}
-                >
-                  Précédent
-                </button>
-                <span>
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button
-                  className="px-4 py-2 border rounded disabled:opacity-50"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages || loading}
-                >
-                  Suivant
-                </button>
-              </div>
-            )}
-          </div>
+    {/* Cartes */}
+    <div className="w-full md:flex-1">
+      {loading ? (
+        <div className="text-center py-8">Chargement des trajets...</div>
+      ) : paginatedRides.length > 0 ? (
+        <div className="space-y-4">
+          {paginatedRides.map((ride) => (
+            <RideCard key={ride.id} ride={ride} />
+          ))}
         </div>
-      </div>
+      ) : (
+        <EmptyState />
+      )}
+
+      {filteredRides.length > 0 && (
+        <div className="flex justify-center items-center gap-4 mt-8">
+          <button
+            className="px-4 py-2 border rounded disabled:opacity-50"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1 || loading}
+          >
+            Précédent
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className="px-4 py-2 border rounded disabled:opacity-50"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages || loading}
+          >
+            Suivant
+          </button>
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
     </main>
   );
 }

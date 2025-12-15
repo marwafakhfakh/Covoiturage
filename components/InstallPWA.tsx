@@ -6,9 +6,11 @@ let deferredPrompt: any = null;
 
 export default function InstallPWA() {
   const [visible, setVisible] = useState(false);
+  const [debugMode, setDebugMode] = useState(false);
 
   useEffect(() => {
     const handler = (e: Event) => {
+      console.log("beforeinstallprompt déclenché!");
       e.preventDefault();
       deferredPrompt = e;
       setVisible(true);
@@ -16,16 +18,25 @@ export default function InstallPWA() {
 
     window.addEventListener("beforeinstallprompt", handler);
 
+    // Debug: vérifier si déjà installé
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      console.log("App déjà installée");
+    }
+
     return () => {
       window.removeEventListener("beforeinstallprompt", handler);
     };
   }, []);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+      console.log("Pas de prompt disponible");
+      return;
+    }
 
     deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
+    const result = await deferredPrompt.userChoice;
+    console.log("Choix utilisateur:", result);
 
     deferredPrompt = null;
     setVisible(false);
@@ -42,7 +53,7 @@ export default function InstallPWA() {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow-lg">
         <h2 className="text-lg font-semibold mb-3">
-          Installer l’application
+          Installer l'application
         </h2>
 
         <p className="text-gray-600 mb-5">
