@@ -72,11 +72,11 @@ export default function PageHeader({
         ) : (
           <div className="text-center mb-4">
             <p className="text-lg text-gray-600 mb-2">
-              {subtitle || "All Available Rides"}
+              {subtitle || "Tous les trajets disponibles"}
             </p>
             {typeof resultCount === "number" && (
               <p className="text-sm text-gray-500">
-                {resultCount} ride{resultCount !== 1 ? "s" : ""} found
+                {resultCount} trajet{resultCount !== 1 ? "s" : ""} trouvé
               </p>
             )}
           </div>

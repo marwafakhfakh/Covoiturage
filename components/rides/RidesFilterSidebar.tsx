@@ -18,8 +18,22 @@ interface RidesFilterSidebarProps {
   availableServices?: string[];
   className?: string;
 }
+// const departureTimeRanges = [
+//   { value: "", label: "Any Time" },
+//   { value: "0-6", label: "00:00 - 06:00" },
+//   { value: "6-12", label: "06:00 - 12:00" },
+//   { value: "12-18", label: "12:00 - 18:00" },
+//   { value: "18-24", label: "18:00 - 24:00" },
+// ];
+
+// const defaultSortOptions: FilterOption[] = [
+//   { value: "departure_time", label: "Departure Time" },
+//   { value: "price_low", label: "Price: Low to High" },
+//   { value: "price_high", label: "Price: High to Low" },
+//   { value: "seats", label: "Available Seats" },
+// ];
 const departureTimeRanges = [
-  { value: "", label: "Any Time" },
+  { value: "", label: "À tout moment" },
   { value: "0-6", label: "00:00 - 06:00" },
   { value: "6-12", label: "06:00 - 12:00" },
   { value: "12-18", label: "12:00 - 18:00" },
@@ -27,10 +41,10 @@ const departureTimeRanges = [
 ];
 
 const defaultSortOptions: FilterOption[] = [
-  { value: "departure_time", label: "Departure Time" },
-  { value: "price_low", label: "Price: Low to High" },
-  { value: "price_high", label: "Price: High to Low" },
-  { value: "seats", label: "Available Seats" },
+  { value: "departure_time", label: "Heure de départ" },
+  { value: "price_low", label: "Prix : du plus bas au plus élevé" },
+  { value: "price_high", label: "Prix : du plus élevé au plus bas" },
+  { value: "seats", label: "Places disponibles" },
 ];
 
 const defaultServices = [
@@ -64,7 +78,7 @@ export default function RidesFilterSidebar({
 
         {/* Sort By */}
         <div className="mb-6">
-          <h3 className="text-sm font-semibold text-gray-700 mb-3">Order By</h3>
+          <h3 className="text-sm font-semibold text-gray-700 mb-3">Trier par</h3>
           <div className="space-y-2">
             {defaultSortOptions.map((option) => (
               <label
@@ -90,7 +104,7 @@ export default function RidesFilterSidebar({
         {/* Departure    Time Range Filter */}
         <div className="mb-6">
           <h3 className="text-sm font-semibold text-gray-700 mb-3">
-            Departure Time
+            Heure de départ
           </h3>
           <div className="space-y-2">
             {departureTimeRanges.map((range) => (
@@ -138,7 +152,7 @@ export default function RidesFilterSidebar({
             onClick={onClearFilters}
             className="mt-6 w-full px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
           >
-            Clear All Filters
+            Réinitialiser tous les filtres
           </button>
         )}
       </div>

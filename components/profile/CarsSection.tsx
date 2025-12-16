@@ -18,13 +18,13 @@ export default function CarsSection({
   return (
     <div className={`bg-white rounded-2xl shadow-xl p-8 mt-8 ${className}`}>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">My Cars</h2>
+        <h2 className="text-2xl font-bold text-gray-900">Mes voitures</h2>
         <button
           onClick={onAddCar}
           className="px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition font-semibold flex items-center gap-2"
         >
           <span className="text-lg">+</span>
-          Add New Car
+Ajouter une nouvelle voiture
         </button>
       </div>
 
@@ -32,16 +32,16 @@ export default function CarsSection({
         <div className="text-center py-12">
           <div className="text-gray-400 text-6xl mb-4">🚗</div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
-            No cars added yet
+Aucune voiture ajoutée pour le moment
           </h3>
           <p className="text-gray-600 mb-6">
-            Add your first car to start offering rides
+Ajoutez votre première voiture pour commencer à proposer des trajets
           </p>
           <button
             onClick={onAddCar}
             className="px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition font-semibold"
           >
-            Add Your First Car
+Ajouter votre première voiture
           </button>
         </div>
       ) : (

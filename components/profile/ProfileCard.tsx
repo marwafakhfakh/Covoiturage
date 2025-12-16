@@ -74,7 +74,7 @@ export default function ProfileCard({
   const phone = user.phone_number || "";
   const bio = user.bio || "";
   const memberSince =
-    user.joining_date?.slice(0, 4) || user.date_joined?.slice(0, 4) || "";
+    user.subscription_end_date?.slice(0, 12) || user.subscription_end_date?.slice(0, 12) || "";
   // Show review score and numbers
   const rating = user.review_score || 0;
   const reviewNumbers = user.review_numbers || 0;
@@ -121,21 +121,22 @@ export default function ProfileCard({
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 text-center lg:text-right">
             <div>
               <div className="text-2xl font-bold text-gray-900">
-                {packagePlan}
+                Forfait
               </div>
-              <div className="text-sm text-gray-600">Package</div>
+              <div className="text-sm text-gray-600">{packagePlan}</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">
-                {subscriptionStatus}
+                Abonnement
               </div>
-              <div className="text-sm text-gray-600">Subscription</div>
+              <div className="text-sm text-gray-600">{subscriptionStatus}</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">
-                {memberSince}
+                 {/* Membre depuis */}
+                 Valide jusqu’au
               </div>
-              <div className="text-sm text-gray-600">Member Since</div>
+              <div className="text-sm text-gray-600">{memberSince}</div>
             </div>
           </div>
         </div>
@@ -152,12 +153,12 @@ export default function ProfileCard({
           )}
           {user.driving_licence && (
             <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
-              Driving Licence: {user.driving_licence}
+              Permis de conduire : {user.driving_licence}
             </span>
           )}
           {/* Show auto-renew status if relevant */}
           <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
-            Auto Renew: {user.auto_renew ? "Yes" : "No"}
+            Renouvellement automatique: {user.auto_renew ? "Yes" : "No"}
           </span>
           {/* Show active status */}
           <span

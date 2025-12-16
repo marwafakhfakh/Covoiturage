@@ -30,7 +30,7 @@ export default function BookingCard({
     >
       <div className="text-center mb-4">
         <div className="text-2xl font-bold text-gray-900 mb-1">{price} TND</div>
-        <div className="text-sm text-gray-600">per passenger</div>
+        <div className="text-sm text-gray-600">par passager</div>
       </div>
 
       <div className="relative">
@@ -46,17 +46,17 @@ export default function BookingCard({
           }`}
         >
           {isRideFull
-            ? "Ride Full"
+            ? "Trajet complet"
             : disabled
-            ? disableReason || "You can't reserve your own ride"
-            : "Reserve This Ride"}
+            ? disableReason || "Vous ne pouvez pas réserver votre propre trajet"
+            : "Réserver ce trajet"}
         </button>
 
         {showTooltip && isDisabled && (
           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-sm rounded-lg whitespace-nowrap z-10">
             {isRideFull
-              ? "This ride is full"
-              : disableReason || "You can't reserve your own ride"}
+              ? "Ce trajet est complet"
+              : disableReason || "Vous ne pouvez pas réserver votre propre trajet"}
             <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
           </div>
         )}
@@ -66,11 +66,11 @@ export default function BookingCard({
         onClick={onContact}
         className="w-full py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition"
       >
-        Contact Driver
+        Contacter le conducteur
       </button>
 
       <div className="text-xs text-gray-500 text-center mt-3">
-        Free cancellation up to 24h before departure
+        Annulation gratuite jusqu’à 24h avant le départ
       </div>
     </div>
   );

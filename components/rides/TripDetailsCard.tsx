@@ -15,13 +15,13 @@ export default function TripDetailsCard({
 }: TripDetailsCardProps) {
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-gray-900">Trip Details</h2>
+      <h2 className="text-2xl font-bold text-gray-900">Détails du voyage</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-gray-50 rounded-xl p-4">
           <div className="flex items-center gap-3">
             <span className="text-2xl">📅</span>
             <div>
-              <div className="font-semibold text-gray-800">Departure</div>
+              <div className="font-semibold text-gray-800">Départ</div>
               <div className="text-gray-600">
                 {new Date(departure.date).toLocaleDateString("en-US", {
                   weekday: "long",
@@ -44,10 +44,10 @@ export default function TripDetailsCard({
           <div className="flex items-center gap-3">
             <span className="text-2xl">🚗</span>
             <div>
-              <div className="font-semibold text-gray-800">Vehicle</div>
+              <div className="font-semibold text-gray-800">Véhicule</div>
               <div className="text-gray-600">{car}</div>
               <div className="text-sm text-gray-500">
-                {availableSeats} seat{availableSeats !== 1 ? "s" : ""} available
+                {availableSeats} place{availableSeats !== 1 ? "s" : ""} disponible
               </div>
             </div>
           </div>

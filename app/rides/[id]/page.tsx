@@ -170,7 +170,7 @@ export default function RideDetailPage({
           href="/rides"
           className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-6 transition"
         >
-          ← Back to rides
+          ← Retour aux trajets
         </Link>
 
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -207,20 +207,20 @@ export default function RideDetailPage({
                       ({ride.user?.review_score?.toFixed(1) || "0.0"})
                     </span>
                   </div>
-                  <span>• {ride.user?.review_numbers || 0} reviews</span>
-                  <span>
+                  <span>• {ride.user?.review_numbers || 0} Avis</span>
+                  {/* <span>
                     • Member since{" "}
                     {ride.user?.joining_date?.slice(0, 4) ||
                       ride.user?.date_joined?.slice(0, 4) ||
                       "-"}
-                  </span>
+                  </span> */}
                 </div>
               </div>
               <div className="text-right">
                 <div className="text-3xl font-bold text-green-600">
                   {ride.price} TND
                 </div>
-                <div className="text-sm text-gray-600">per seat</div>
+                <div className="text-sm text-gray-600">par place</div>
               </div>
             </div>
           </div>
@@ -254,7 +254,7 @@ export default function RideDetailPage({
                 {ride.details && isRideOwner && (
                   <div className="space-y-4">
                     <h2 className="text-2xl font-bold text-gray-900">
-                      Reservation Details
+                      Détails de la réservation
                     </h2>
                     <div className="bg-gray-50 rounded-xl p-6">
                       {parseReservationDetails(ride.details).map(
@@ -266,7 +266,7 @@ export default function RideDetailPage({
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
                                 <h4 className="font-semibold text-gray-800 mb-2">
-                                  Passengers
+                                  Passagers
                                 </h4>
                                 {reservation.passengers?.map(
                                   (passenger, passengerIndex: number) => (
@@ -276,13 +276,13 @@ export default function RideDetailPage({
                                     >
                                       <p>
                                         <span className="font-medium">
-                                          Name:
+                                          Nom:
                                         </span>{" "}
                                         {passenger.username}
                                       </p>
                                       <p>
                                         <span className="font-medium">
-                                          Phone:
+                                          Téléphone:
                                         </span>{" "}
                                         {passenger.phoneNumber}
                                       </p>
@@ -292,7 +292,7 @@ export default function RideDetailPage({
                               </div>
                               <div>
                                 <h4 className="font-semibold text-gray-800">
-                                  Total Seats
+                                  Nombre total de places
                                 </h4>
                                 <p className="text-sm text-gray-600">
                                   {reservation.totalSeats}
@@ -300,7 +300,7 @@ export default function RideDetailPage({
                               </div>
                               <div>
                                 <h4 className="font-semibold text-gray-800">
-                                  Reservation Date
+                                  Date de réservation
                                 </h4>
                                 <p className="text-sm text-gray-600">
                                   {new Date(
@@ -367,7 +367,7 @@ export default function RideDetailPage({
                   onContact={handleContact}
                   disabled={isRideOwner}
                   disableReason={
-                    isRideOwner ? "You can't reserve your own ride" : undefined
+                    isRideOwner ? "Vous ne pouvez pas réserver votre propre trajet" : undefined
                   }
                 />
 

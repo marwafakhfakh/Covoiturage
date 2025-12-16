@@ -18,7 +18,7 @@ export default function DriverInfoCard({
   return (
     <div className={`bg-gray-50 rounded-xl p-6 ${className}`}>
       <h3 className="text-lg font-bold text-gray-900 mb-4">
-        Driver Verification
+        Vérification du conducteur
       </h3>
       <div className="space-y-3">
         <div className="flex items-center gap-3">
@@ -33,7 +33,7 @@ export default function DriverInfoCard({
               </span>
             )}
           </span>
-          <span className="text-sm text-gray-700">Phone verified</span>
+          <span className="text-sm text-gray-700">Téléphone vérifié</span>
         </div>
         <div className="flex items-center gap-3">
           <span
@@ -47,7 +47,7 @@ export default function DriverInfoCard({
               </span>
             )}
           </span>
-          <span className="text-sm text-gray-700">Email verified</span>
+          <span className="text-sm text-gray-700">Email vérifié</span>
         </div>
       </div>
     </div>

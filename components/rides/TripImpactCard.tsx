@@ -15,16 +15,16 @@ export default function TripImpactCard({
     <div
       className={`bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-6 ${className}`}
     >
-      <h3 className="text-lg font-bold text-gray-900 mb-4">Trip Impact</h3>
+      <h3 className="text-lg font-bold text-gray-900 mb-4">Impact du voyage</h3>
       <div className="space-y-3">
         <div className="flex justify-between">
-          <span className="text-sm text-gray-700">CO₂ saved</span>
+          <span className="text-sm text-gray-700">CO₂ économisé</span>
           <span className="text-sm font-semibold text-green-600">
             {co2Saved}
           </span>
         </div>
         <div className="flex justify-between">
-          <span className="text-sm text-gray-700">Money saved</span>
+          <span className="text-sm text-gray-700">Argent économisé</span>
           <span className="text-sm font-semibold text-green-600">
             {moneySaved}
           </span>

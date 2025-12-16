@@ -473,7 +473,7 @@ setOfferedRides((prev) =>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <TripsSection
-            title="My Reservations"
+title="Mes réservations"
             trips={reservations.filter(
               (r) => r.status?.toLowerCase() !== "canceled"
             )}
@@ -482,7 +482,7 @@ setOfferedRides((prev) =>
           />
 
           <TripsSection
-            title="My Offered Rides"
+title="Mes trajets proposés"
             trips={offeredRides}
             type="offered"
             onCancel={handleCancelOfferedRide}

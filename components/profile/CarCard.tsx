@@ -56,7 +56,7 @@ export default function CarCard({
         <div className="flex items-center gap-4 text-sm text-gray-600">
           <div className="flex items-center gap-1">
             <span>👥</span>
-            <span>{car.seats} seats</span>
+            <span>{car.seats} places</span>
           </div>
           <div className="flex items-center gap-1">
             <span>⛽</span>
@@ -65,7 +65,7 @@ export default function CarCard({
         </div>
 
         <div className="text-sm text-gray-600">
-          <span className="font-medium">License:</span> {car.licensePlate}
+          <span className="font-medium">Immatriculation:</span> {car.licensePlate}
         </div>
 
         <div className="flex gap-2 pt-2">
@@ -73,13 +73,13 @@ export default function CarCard({
             onClick={() => onEdit?.(car)}
             className="flex-1 px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm font-medium"
           >
-            Edit
+            Modifier
           </button>
           <button
             onClick={() => onRemove?.(car.id)}
             className="flex-1 px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm font-medium"
           >
-            Remove
+            Supprimer
           </button>
         </div>
       </div>
