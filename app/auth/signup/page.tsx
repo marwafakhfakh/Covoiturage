@@ -187,12 +187,12 @@ export default function SignUp() {
   onChange={handleChange}
   required
 >
-  J'accepte les{" "}
+  J&apos;accepte les{" "}
   <Link
     href="/terms"
     className="text-black hover:text-gray-700 font-medium"
   >
-    Conditions d'utilisation
+    Conditions d&apos;utilisation
   </Link>{" "}
   et la{" "}
   <Link

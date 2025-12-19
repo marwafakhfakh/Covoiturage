@@ -72,7 +72,7 @@ export default function Navbar() {
               href="/auth/signup"
               className="ml-2 px-6 py-2 rounded-full border-2 border-black text-black font-bold hover:bg-black hover:text-white transition shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
             >
-              S'inscrire
+              S&apos;inscrire
             </Link>
           </div>
 
@@ -161,7 +161,7 @@ export default function Navbar() {
                 href="/auth/signup"
                 className="block w-full text-center mt-2 px-6 py-2 rounded-full border-2 border-black text-black font-bold hover:bg-black hover:text-white transition shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
               >
-                S'incrire
+                S&apos;incrire
               </Link>
             </div>
           </div>

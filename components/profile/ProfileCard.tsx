@@ -300,7 +300,7 @@ export default function ProfileCard({
               </div>
               <div>
                 <div className="text-2xl font-bold text-gray-900">
-                  Valide jusqu'au
+                  Valide jusqu&apos;au
                 </div>
                 <div className="text-sm text-gray-600">{memberSince}</div>
               </div>

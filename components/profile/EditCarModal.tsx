@@ -293,7 +293,7 @@ export default function EditCarModal({ car, isOpen, onClose, onSuccess }: EditCa
                       Choisir une image
                     </label>
                     <p className="mt-2 text-xs text-gray-500">
-                      PNG, JPG jusqu'à 5MB
+                      PNG, JPG jusqu&apos;à 5MB
                     </p>
                     {errors.image && (
                       <p className="mt-1 text-xs text-red-500">{errors.image}</p>
