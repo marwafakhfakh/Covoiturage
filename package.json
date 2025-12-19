@@ -30,12 +30,14 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/leaflet": "^1.9.21",
+    "@types/minimatch": "^5.1.2",
     "@types/next-pwa": "^5.6.9",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
+    "minimatch": "^9.0.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
