@@ -40,9 +40,9 @@ export default function Navbar() {
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
-              Find Rides
+              Trouver un trajet
             </Link>
-            <Link
+            {/* <Link
               href="/offer"
               className="text-gray-700 hover:text-black transition font-medium px-3 py-2 rounded-lg hover:bg-gray-100 flex items-center"
             >
@@ -60,19 +60,19 @@ export default function Navbar() {
                 />
               </svg>
               Offer Ride
-            </Link>
+            </Link> */}
             {/* Sign In & Sign Up Buttons */}
             <Link
               href="/auth/login"
               className="ml-4 px-6 py-2 rounded-full bg-black text-white font-bold hover:bg-gray-900 transition border-2 border-black shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
             >
-              Sign In
+              Se connecté
             </Link>
             <Link
               href="/auth/signup"
               className="ml-2 px-6 py-2 rounded-full border-2 border-black text-black font-bold hover:bg-black hover:text-white transition shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
             >
-              Sign Up
+              S'inscrire
             </Link>
           </div>
 
@@ -131,7 +131,7 @@ export default function Navbar() {
                 </svg>
                 Find Rides
               </Link>
-              <Link
+              {/* <Link
                 href="/offer"
                 className="text-gray-700 hover:text-black transition font-medium px-3 py-2 rounded-lg hover:bg-gray-100 flex items-center"
               >
@@ -149,19 +149,19 @@ export default function Navbar() {
                   />
                 </svg>
                 Offer Ride
-              </Link>
+              </Link> */}
               {/* Sign In & Sign Up Buttons Mobile */}
               <Link
                 href="/auth/login"
                 className="block w-full text-center mt-2 px-6 py-2 rounded-full bg-black text-white font-bold hover:bg-gray-900 transition border-2 border-black shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
               >
-                Sign In
+                Se connecté
               </Link>
               <Link
                 href="/auth/signup"
                 className="block w-full text-center mt-2 px-6 py-2 rounded-full border-2 border-black text-black font-bold hover:bg-black hover:text-white transition shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
               >
-                Sign Up
+                S'incrire
               </Link>
             </div>
           </div>

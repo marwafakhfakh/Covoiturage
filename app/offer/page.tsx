@@ -862,15 +862,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               {/* Route Section */}
               <FormSection title="Route Information">
                 {/* Carte avec le trajet complet - ✅ Avec coordonnées précises */}
-                <RouteMapLeaflet
-                  delegations={delegations}
-                  departureName={form.departure_place}
-                  arrivalName={form.arrival_place}
-                  onDistanceCalculated={handleDistanceCalculated}
-                  preciseDepartureCoords={preciseDepartureCoords}
-                  preciseArrivalCoords={preciseArrivalCoords}
-                />
-
+                
                 {/* Sélecteurs de lieu */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                   <div className="space-y-2">
@@ -938,6 +930,14 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                     }}
                   />
                 </div>
+                <RouteMapLeaflet
+                  delegations={delegations}
+                  departureName={form.departure_place}
+                  arrivalName={form.arrival_place}
+                  onDistanceCalculated={handleDistanceCalculated}
+                  preciseDepartureCoords={preciseDepartureCoords}
+                  preciseArrivalCoords={preciseArrivalCoords}
+                />
               </FormSection>
               {/* Trip Details Section */}
               <FormSection title="Planning et Disponibilité">

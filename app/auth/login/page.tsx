@@ -116,12 +116,12 @@ placeholder="Entrez votre mot de passe"
       </AuthCard>
       <div className="text-center">
         <p className="text-gray-600">
-          Don&apos;t have an account?{" "}
+  Vous n&apos;avez pas de compte ?{" "}
           <Link
             href="/auth/signup"
             className="font-medium text-black hover:text-gray-700"
           >
-            Sign up here
+    Inscrivez-vous ici
           </Link>
         </p>
       </div>
