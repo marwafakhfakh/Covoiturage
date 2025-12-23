@@ -3,9 +3,7 @@ import { useState, useEffect } from 'react';
 import { X, Upload, Car as CarIcon, Palette, Fuel, Calendar, Hash, FileText } from 'lucide-react';
 import api from '../../api/api';
 
-// ============================================================================
-// TYPES - Correspond à votre backend Django
-// ============================================================================
+
 
 interface VehicleType {
   id: number;

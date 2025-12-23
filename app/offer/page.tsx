@@ -533,6 +533,7 @@ const SingleLocationMap = dynamic(() => import("./SingleLocationMapProps"), {
   ssr: false,
 });
 import type { Delegation } from "./DelegationMapLeaflet";
+import LocationAutocomplete from "./LocationAutocomplete";
 
 type Car = {
   id: number;
@@ -865,6 +866,29 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 
                 {/* Sélecteurs de lieu */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+  <LocationAutocomplete
+    name="departure_place"
+    value={form.departure_place}
+    onChange={handleChange}
+    delegations={delegations}
+    label="Departure Location"
+    placeholder="Tapez pour rechercher"
+    required={true}
+    focusColor="blue"
+  />
+
+  <LocationAutocomplete
+    name="arrival_place"
+    value={form.arrival_place}
+    onChange={handleChange}
+    delegations={delegations}
+    label="Arrival Location"
+    placeholder="Tapez pour rechercher"
+    required={true}
+    focusColor="green"
+  />
+</div>
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                   <div className="space-y-2">
                     <label className="block text-sm font-semibold text-gray-700">
                       Departure Location
@@ -904,7 +928,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                       ))}
                     </select>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Cartes individuelles pour chaque lieu */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">

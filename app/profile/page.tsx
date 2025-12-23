@@ -552,9 +552,7 @@ export default function ProfilePage() {
   const [offeredRides, setOfferedRides] = useState<OfferedRide[]>([]);
   const [reservations, setReservations] = useState<Reservation[]>([]);
 
-  // ============================================================================
-  // CHARGER LES RÉSERVATIONS
-  // ============================================================================
+
   useEffect(() => {
     async function fetchReservations() {
       try {
@@ -589,9 +587,7 @@ export default function ProfilePage() {
     fetchReservations();
   }, []);
 
-  // ============================================================================
-  // CHARGER LES TRAJETS OFFERTS
-  // ============================================================================
+
   useEffect(() => {
     async function fetchOfferedRides() {
       try {
@@ -621,9 +617,7 @@ export default function ProfilePage() {
     fetchOfferedRides();
   }, []);
 
-  // ============================================================================
-  // CHARGER LES VOITURES - MISE À JOUR POUR STOCKER LES IDs
-  // ============================================================================
+
   useEffect(() => {
     async function fetchCars() {
       try {
@@ -668,9 +662,7 @@ export default function ProfilePage() {
     fetchCars();
   }, []);
 
-  // ============================================================================
-  // AJOUTER UNE VOITURE
-  // ============================================================================
+
   const handleAddCar = async (formData: CarFormData) => {
     if (!user?.id) {
       alert("Utilisateur non connecté.");
@@ -732,37 +724,30 @@ export default function ProfilePage() {
       
       const error = err as { response?: { data?: Record<string, unknown> } };
       
-      if (error.response?.data) {
-        const errors = error.response.data;
-        let msg = "Erreurs:\n";
-        for (const [field, errorMsg] of Object.entries(errors)) {
-          msg += `${field}: ${Array.isArray(errorMsg) ? errorMsg[0] : errorMsg}\n`;
-        }
-        alert(msg);
-      } else {
-        alert("Erreur serveur lors de la création de la voiture.");
-      }
+      // if (error.response?.data) {
+      //   const errors = error.response.data;
+      //   let msg = "Erreurs:\n";
+      //   for (const [field, errorMsg] of Object.entries(errors)) {
+      //     msg += `${field}: ${Array.isArray(errorMsg) ? errorMsg[0] : errorMsg}\n`;
+      //   }
+      //   alert(msg);
+      // } else {
+      //   alert("Erreur serveur lors de la création de la voiture.");
+      // }
+          window.location.reload();
+
     }
   };
 
-  // ============================================================================
-  // MODIFIER UNE VOITURE - Le modal gère ça maintenant
-  // ============================================================================
   const handleEditCar = (car: Car) => {
     console.log("✅ Edit car appelé (géré par le modal):", car);
     // Le modal s'ouvre automatiquement depuis CarCard
   };
 
-  // ============================================================================
-  // SUPPRIMER UNE VOITURE
-  // ============================================================================
   const handleRemoveCar = (carId: number) => {
     setOwnedCars((prev) => prev.filter((car) => car.id !== carId));
   };
 
-  // ============================================================================
-  // ANNULER UNE RÉSERVATION
-  // ============================================================================
   const handleCancelReservation = async (tripId: number) => {
     try {
       await api.put(`/api/reservations/${tripId}/`, { status: "canceled" });
@@ -774,9 +759,6 @@ export default function ProfilePage() {
     }
   };
 
-  // ============================================================================
-  // ANNULER UN TRAJET OFFERT
-  // ============================================================================
   const handleCancelOfferedRide = async (tripId: number) => {
     try {
       await api.put(`/api/posts/${tripId}/`, { status: "canceled" });
@@ -788,16 +770,12 @@ export default function ProfilePage() {
     }
   };
 
-  // ============================================================================
-  // MODIFIER UN TRAJET OFFERT
-  // ============================================================================
+
   const handleEditOfferedRide = (tripId: number) => {
     console.log("Edit offered ride:", tripId);
   };
 
-  // ============================================================================
-  // RENDER
-  // ============================================================================
+
   return (
     <main className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-6xl mx-auto px-4">

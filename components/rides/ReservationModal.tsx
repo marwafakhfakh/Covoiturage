@@ -62,7 +62,7 @@ export default function ReservationModal({
 
     if (!isValid) {
       setError(
-        "Please fill in all passenger information and ensure phone is 8 digits"
+        "Veuillez remplir toutes les informations sur le passager et vous assurer que le téléphone comporte 8 chiffres."
       );
       return;
     }
@@ -93,7 +93,7 @@ export default function ReservationModal({
       });
 
       if (response.status === 200 || response.status === 201) {
-        setSuccessMessage("Reservation successful!");
+        setSuccessMessage("Réservation réussie!");
         onSuccess?.();
         setTimeout(() => {
           setSuccessMessage("");
@@ -125,11 +125,11 @@ export default function ReservationModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
       <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-bold text-gray-900">Reserve Your Ride</h2>
+          <h2 className="text-xl font-bold text-gray-900">Réservez votre trajet</h2>
           <button
             onClick={handleClose}
             className="text-gray-400 hover:text-gray-600 text-2xl"
@@ -151,7 +151,7 @@ export default function ReservationModal({
                 {/* Number of Seats Selection */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-3">
-                    Number of seats
+                    Nombre de places 
                   </label>
                   <div className="flex items-center justify-center gap-4">
                     <button
@@ -194,14 +194,14 @@ export default function ReservationModal({
                     </button>
                   </div>
                   <p className="text-sm text-gray-500 mt-3 text-center">
-                    Available seats: {availableSeats}
+                    Places disponibles: {availableSeats}
                   </p>
                 </div>
 
                 {/* Passenger Information */}
                 <div>
                   <h3 className="text-lg font-medium text-gray-900 mb-4">
-                    Passenger Information
+                    Informations sur le passager
                   </h3>
 
                   {passengers.map((passenger, index) => (
@@ -210,12 +210,12 @@ export default function ReservationModal({
                       className="border border-gray-200 rounded-lg p-4 mb-4"
                     >
                       <h4 className="font-medium text-gray-700 mb-3">
-                        Passenger {index + 1}
+                        Passager {index + 1}
                       </h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Username
+                            Nom d'utilisateur
                           </label>
                           <input
                             type="text"
@@ -228,12 +228,12 @@ export default function ReservationModal({
                               )
                             }
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Enter username"
+                            placeholder="Entrer le nom d’utilisateur"
                           />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Phone Number
+                            Numéro de téléphone
                           </label>
                           <input
                             type="tel"
@@ -246,7 +246,7 @@ export default function ReservationModal({
                               )
                             }
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Enter phone number"
+                            placeholder="Entrer le numéro de téléphone"
                           />
                         </div>
                       </div>
@@ -271,7 +271,7 @@ export default function ReservationModal({
               onClick={handleClose}
               className="flex-1 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-100 transition"
             >
-              Cancel
+              Annuler
             </button>
             <button
               onClick={handleSubmit}
@@ -300,10 +300,10 @@ export default function ReservationModal({
                       className="opacity-75"
                     />
                   </svg>
-                  Processing...
+                  Traitement...
                 </span>
               ) : (
-                "Confirm Reservation"
+                "Confirmer la réservation"
               )}
             </button>
           </div>

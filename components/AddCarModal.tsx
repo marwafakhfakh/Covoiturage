@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import api from "../api/api"; // ✅ Importez l'API directement
+import CarModelAutocomplete from "./CarModelAutocomplete";
 export interface CarFormData {
   model: string;
   vehicle_type: string;
@@ -332,14 +333,6 @@ export default function AddCarModal({
               <p className="text-sm text-yellow-800">
                 ⚠️ No car models available. Please add at least one brand and model in the admin panel at:
               </p>
-              <a 
-                href="http://localhost:8000/admin" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800 underline text-sm mt-2 inline-block"
-              >
-                http://localhost:8000/admin
-              </a>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -358,7 +351,17 @@ export default function AddCarModal({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Model */}
-                <div className="md:col-span-2">
+                <CarModelAutocomplete
+  models={models}
+  brands={brands}
+  value={formData.model}
+  onChange={(value) => {
+    console.log("✅ Model selected:", value);
+    setFormData({ ...formData, model: value });
+  }}
+  required
+/>
+                {/* <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Car Model * <span className="text-xs text-gray-500"></span>
                   </label>
@@ -378,12 +381,12 @@ export default function AddCarModal({
                       </option>
                     ))}
                   </select>
-                </div>
+                </div> */}
 
                 {/* Vehicle Type */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Vehicle Type * <span className="text-xs text-gray-500"></span>
+                   Type de véhicule * <span className="text-xs text-gray-500"></span>
                   </label>
                   <select
                     required
@@ -391,7 +394,7 @@ export default function AddCarModal({
                     onChange={(e) => setFormData({ ...formData, vehicle_type: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
                   >
-                    <option value="">-- Select a type --</option>
+                    <option value="">-- Sélectionner un type --</option>
                     {vehicleTypes.map((type) => (
                       <option key={type.id} value={type.id}>
                         {type.name}
@@ -403,7 +406,7 @@ export default function AddCarModal({
                 {/* Color */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Color * <span className="text-xs text-gray-500"></span>
+                    Couleur * <span className="text-xs text-gray-500"></span>
                   </label>
                   <select
                     required
@@ -411,7 +414,7 @@ export default function AddCarModal({
                     onChange={(e) => setFormData({ ...formData, color: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
                   >
-                    <option value="">-- Select a color --</option>
+                    <option value="">-- Sélectionner une couleur --</option>
                     {colors.map((color) => (
                       <option key={color.id} value={color.id}>
                         {color.name}
@@ -420,9 +423,9 @@ export default function AddCarModal({
                   </select>
                 </div>
 
-                {/* Serial Number */}
+                {/* Numéro de série */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Serial Number *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Numéro de série *</label>
                   <input
                     type="text"
                     required
@@ -433,9 +436,9 @@ export default function AddCarModal({
                   />
                 </div>
 
-                {/* Seats */}
+                {/* Places */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Number of Seats *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Nombre de places *</label>
                   <select
                     required
                     value={formData.nb_place}
@@ -443,7 +446,7 @@ export default function AddCarModal({
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
                   >
                     {[1,2,3].map((num) => (
-                      <option key={num} value={num}>{num} seat{num > 1 ? "s" : ""}</option>
+                      <option key={num} value={num}>{num} place{num > 1 ? "s" : ""}</option>
                     ))}
                   </select>
                 </div>
@@ -451,7 +454,7 @@ export default function AddCarModal({
                 {/* Engine Type */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Engine Type * <span className="text-xs text-gray-500"></span>
+                    Type de moteur * <span className="text-xs text-gray-500"></span>
                   </label>
                   <select
                     required
@@ -459,7 +462,7 @@ export default function AddCarModal({
                     onChange={(e) => setFormData({ ...formData, engine_type: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
                   >
-                    <option value="">-- Select engine type --</option>
+                    <option value="">-- Sélectionner le type de moteur--</option>
                     {engineTypes.map((type) => (
                       <option key={type.id} value={type.id}>
                         {type.name}
@@ -468,9 +471,9 @@ export default function AddCarModal({
                   </select>
                 </div>
 
-                {/* Grey Card */}
+                {/* Carte grise */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Grey Card *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Carte grise *</label>
                   <input
                     type="text"
                     required
@@ -483,7 +486,7 @@ export default function AddCarModal({
 
                 {/* Year */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Year *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Année *</label>
                   <input
                     type="number"
                     required
@@ -497,7 +500,7 @@ export default function AddCarModal({
 
                 {/* Image */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Car Image (Optional, max 5MB)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Image de la voiture (Optionnel, max 5MB)</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -514,14 +517,14 @@ export default function AddCarModal({
                   disabled={loading}
                   className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium disabled:opacity-50"
                 >
-                  Cancel
+                  Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
                   className="flex-1 px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition font-medium disabled:opacity-50"
                 >
-                  {loading ? "Adding..." : "Ajouté voiture"}
+                 {loading ? "Ajout en cours..." : "Ajouter voiture"}
                 </button>
               </div>
             </form>

@@ -66,7 +66,7 @@ export default function Navbar() {
               href="/auth/login"
               className="ml-4 px-6 py-2 rounded-full bg-black text-white font-bold hover:bg-gray-900 transition border-2 border-black shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
             >
-              Se connecté
+              Se connecter
             </Link>
             <Link
               href="/auth/signup"
@@ -155,7 +155,7 @@ export default function Navbar() {
                 href="/auth/login"
                 className="block w-full text-center mt-2 px-6 py-2 rounded-full bg-black text-white font-bold hover:bg-gray-900 transition border-2 border-black shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
               >
-                Se connecté
+                Se connecter
               </Link>
               <Link
                 href="/auth/signup"
