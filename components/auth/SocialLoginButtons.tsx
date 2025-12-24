@@ -9,7 +9,7 @@ export default function SocialLoginButtons() {
           </div>
           <div className="relative flex justify-center text-sm">
             <span className="px-2 bg-white text-gray-500">
-              Or continue with
+              Ou continuez avec
             </span>
           </div>
         </div>

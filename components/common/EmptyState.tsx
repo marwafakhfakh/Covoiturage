@@ -11,10 +11,10 @@ interface EmptyStateProps {
 
 export default function EmptyState({
   icon = "🚗",
-title = "Rejoignez Namlaa pour continuer",
-description = "Veuillez vous inscrire pour continuer et accéder à toutes les fonctionnalités.",
-actionText = "S’inscrire",
-actionHref = "/auth/signup",
+title = "Aucun trajet trouvé",
+description = "Essayez de modifier vos critères de recherche ou revenez plus tard pour voir de nouveaux trajets.",
+actionText = "Proposer un trajet",
+actionHref = "/offer",
   className = "",
 }: EmptyStateProps) {
   return (

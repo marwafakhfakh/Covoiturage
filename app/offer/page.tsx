@@ -766,7 +766,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       nb_places_disponible: form.nb_places_disponible,
       description: form.description,
       user: user?.id,
-      car: selectedCar?.id,
+      car_id: selectedCar?.id,
       status: "open",
       services_ids: form.services,
       // ✅ Envoi des coordonnées séparées (lat et lng)

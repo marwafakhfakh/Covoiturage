@@ -109,7 +109,7 @@ placeholder="Entrez votre mot de passe"
             </Link>
           </div>
           <AuthButton type="submit" disabled={loading}>
-            {loading ? "Signing in..." : "Sign in"}
+{loading ? "Connexion en cours..." : "Se connecter"}
           </AuthButton>
         </form>
         <SocialLoginButtons />

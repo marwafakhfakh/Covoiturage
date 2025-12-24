@@ -106,7 +106,7 @@ function TripItem({ trip, type, onCancel, onEdit }: TripItemProps) {
         >
           {trip.status}
         </span>
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           {onCancel && trip.status?.toLowerCase() !== "canceled" && (
             <button
               onClick={() => onCancel(trip.id)}
@@ -115,7 +115,7 @@ function TripItem({ trip, type, onCancel, onEdit }: TripItemProps) {
               Supprimer
             </button>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );
