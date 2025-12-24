@@ -124,7 +124,7 @@ export default function LocationAutocomplete({
 {isOpen && inputValue.trim() !== '' && filteredOptions.length === 0 && (
   <div className="absolute z-[9999] w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg p-4">
     <p className="text-sm text-gray-500 text-center">
-      Aucun résultat pour "{inputValue}"
+      Aucun résultat trouvé
     </p>
   </div>
 )}
