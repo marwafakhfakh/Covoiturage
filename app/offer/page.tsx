@@ -691,64 +691,6 @@ export default function OfferRidePage() {
     setPriceManuallyEdited(false);
   }, [form.departure_place, form.arrival_place]);
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   setError(null);
-
-  //   const selectedCar = ownedCars.find(
-  //     (car) => car.id === parseInt(form.selected_car_id)
-  //   );
-
-  //   try {
-  //     const postData = {
-  //       departure_place: form.departure_place,
-  //       arrival_place: form.arrival_place,
-  //       departure_date: form.departure_date,
-  //       price: form.price,
-  //       nb_places_disponible: form.nb_places_disponible,
-  //       description: form.description,
-  //       user: user?.id,
-  //       car: selectedCar?.id,
-  //       status: "open",
-  //       services_ids: form.services,
-  //       // Ajouter les coordonnées précises si elles existent
-  //       departure_coords: preciseDepartureCoords,
-  //       arrival_coords: preciseArrivalCoords,
-  //     };
-
-  //     console.log('📤 Données envoyées:', postData);
-
-  //     await api.post("/api/posts/", postData);
-  //     setSuccess(true);
-      
-  //     // Réinitialiser le formulaire après succès
-  //     setForm({
-  //       departure_place: "",
-  //       arrival_place: "",
-  //       departure_date: getDefaultDateTime(),
-  //       price: "",
-  //       nb_places_disponible: "",
-  //       selected_car_id: "",
-  //       services: [],
-  //       description: "",
-  //     });
-  //     setPreciseDepartureCoords(null);
-  //     setPreciseArrivalCoords(null);
-      
-  //   } catch (err) {
-  //     console.error('❌ Error publishing ride:', err);
-  //     if (err && typeof err === 'object' && 'response' in err) {
-  //       const error = err as { response?: { data?: { detail?: string; [key: string]: unknown } } };
-  //       const detail = error.response?.data?.detail;
-  //       const allErrors = error.response?.data 
-  //         ? Object.values(error.response.data).flat().join(" ")
-  //         : "";
-  //       setError(detail || allErrors || "An error occurred while publishing your ride.");
-  //     } else {
-  //       setError("An error occurred while publishing your ride.");
-  //     }
-  //   }
-  // };
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   setError(null);
@@ -767,6 +709,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       description: form.description,
       user: user?.id,
       car_id: selectedCar?.id,
+      //car: selectedCar?.id,
       status: "open",
       services_ids: form.services,
       // ✅ Envoi des coordonnées séparées (lat et lng)
@@ -851,13 +794,13 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           )}
           {success ? (
             <SuccessMessage
-              title="Ride Offered Successfully!"
-              description="Your ride has been posted and is now available for bookings."
-              actionText="Offer Another Ride"
+              title="Trajet proposé avec succès !"
+              description="Votre trajet a été publié et est maintenant disponible pour les réservations."
+              actionText="Proposer un autre trajet"
               onAction={() => setSuccess(false)}
             />
           ) : loading ? (
-            <div className="text-center text-gray-500 py-12">Loading...</div>
+            <div className="text-center text-gray-500 py-12">Chargement...</div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Route Section */}

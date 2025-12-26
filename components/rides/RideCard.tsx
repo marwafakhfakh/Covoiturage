@@ -365,7 +365,7 @@ export default function RideCard({ ride, className = "" }: RideCardProps) {
   // Car info
   const car = ride.car;
   const carName = car.model_details?.brand.name
-    ? `${car.model_details.name} (${car.type}, ${car.color_details?.name})`
+    ? ` (${car.model_details.brand.name} ${car.model_details.name} , ${car.color_details?.name}) ${car.serial_number}`
     : `${car.type}, ${car.color_details?.name}`;
 
   // Services
@@ -451,6 +451,22 @@ export default function RideCard({ ride, className = "" }: RideCardProps) {
 
               {/* Date & Time */}
               <div className="text-xs sm:text-sm text-gray-600 mb-2">
+  {departureDate.toLocaleDateString("fr-FR", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  })}{" "}
+  à{" "}
+  {departureDate.toLocaleTimeString("fr-FR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "UTC",
+  })}
+</div>
+
+              {/* <div className="text-xs sm:text-sm text-gray-600 mb-2">
                 {departureDate.toLocaleDateString("en-US", {
                   weekday: "short",
                   month: "short",
@@ -464,7 +480,7 @@ export default function RideCard({ ride, className = "" }: RideCardProps) {
                   minute: "2-digit",
                   timeZone: "UTC",
                 })}
-              </div>
+              </div> */}
 
               {/* Services */}
               <div className="flex flex-wrap gap-1">

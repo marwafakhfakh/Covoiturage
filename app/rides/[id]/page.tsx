@@ -41,11 +41,34 @@
 //     professional?: boolean;
 //   };
 //   car?: {
-//     model?: {
+//     id?: number;
+//     serial_number?: string;
+//     nb_place?: number;
+//     year?: number;
+//     image?: string;
+//     model_details?: {
+//       id?: number;
+//       name?: string;
+//       brand?: {
+//         id?: number;
+//         name?: string;
+//         logo?: string;
+//       };
+//     };
+//     vehicle_type_details?: {
+//       id?: number;
+//       name?: string;
+//       vehicle_image?: string;
+//     };
+//     color_details?: {
+//       id?: number;
+//       name?: string;
+//       code?: string;
+//     };
+//     engine_type_details?: {
+//       id?: number;
 //       name?: string;
 //     };
-//     type?: string;
-//     color?: string;
 //   };
 //   services?: Array<{
 //     name: string;
@@ -72,6 +95,7 @@
 //     api
 //       .get(`/api/posts/${id}/`)
 //       .then((res) => {
+//         console.log("Ride data:", res.data); // Pour déboguer
 //         setRide(res.data);
 //         setLoading(false);
 //       })
@@ -85,9 +109,7 @@
 //   if (error || !ride) return notFound();
 
 //   // Check if current user is the owner of the ride
-//   //const isRideOwner = currentUser && ride.user?.id === currentUser.id;
 //   const isRideOwner = !!(currentUser && ride && ride.user?.id === currentUser.id);
-
 
 //   const renderStars = (rating: number) => {
 //     const stars = [];
@@ -121,7 +143,6 @@
 //     if (!details) return [];
 
 //     try {
-//       // Split by newlines and parse each JSON line
 //       const lines = details.split("\n").filter((line) => line.trim());
 //       return lines.map((line) => JSON.parse(line));
 //     } catch (error) {
@@ -145,7 +166,6 @@
 //   };
 
 //   const handleReservationSuccess = () => {
-//     // Refresh ride data to update available seats
 //     api
 //       .get(`/api/posts/${id}/`)
 //       .then((res) => {
@@ -162,10 +182,31 @@
 //     alert("Contact functionality would be implemented here");
 //   };
 
+//   // ✅ Construire les informations complètes du véhicule
+//   const getCarInfo = () => {
+//     if (!ride.car) return null;
+
+//     const brand = ride.car.model_details?.brand?.name || "";
+//     const model = ride.car.model_details?.name || "";
+//     const vehicleType = ride.car.vehicle_type_details?.name || "";
+//     const color = ride.car.color_details?.name || "";
+//     const year = ride.car.year || "";
+
+//     return {
+//       brand,
+//       model,
+//       vehicleType,
+//       color,
+//       year,
+//       fullName: brand && model ? `${brand} ${model}` : vehicleType || "Véhicule",
+//     };
+//   };
+
+//   const carInfo = getCarInfo();
+
 //   return (
 //     <main className="min-h-screen bg-gray-50 py-8">
 //       <div className="max-w-4xl mx-auto px-4">
-//         {/* Back Button */}
 //         <Link
 //           href="/rides"
 //           className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-6 transition"
@@ -174,7 +215,6 @@
 //         </Link>
 
 //         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-//           {/* Header */}
 //           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-8">
 //             <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
 //               <Image
@@ -189,7 +229,7 @@
 //                 className="w-20 h-20 rounded-full border-4 border-white shadow-lg object-cover"
 //               />
 //               <div className="flex-1">
-//                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
+//                 <h1 className="text-2xl font-bold text-gray-900 mb-2">
 //                   {ride.departure_place} → {ride.arrival_place}
 //                 </h1>
 //                 <div className="flex items-center gap-4 text-sm text-gray-600">
@@ -208,16 +248,10 @@
 //                     </span>
 //                   </div>
 //                   <span>• {ride.user?.review_numbers || 0} Avis</span>
-//                   {/* <span>
-//                     • Member since{" "}
-//                     {ride.user?.joining_date?.slice(0, 4) ||
-//                       ride.user?.date_joined?.slice(0, 4) ||
-//                       "-"}
-//                   </span> */}
 //                 </div>
 //               </div>
 //               <div className="text-right">
-//                 <div className="text-3xl font-bold text-green-600">
+//                 <div className="text-2xl font-bold text-green-600">
 //                   {ride.price} TND
 //                 </div>
 //                 <div className="text-sm text-gray-600">par place</div>
@@ -227,18 +261,13 @@
 
 //           <div className="p-8">
 //             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-//               {/* Main Info */}
 //               <div className="lg:col-span-2 space-y-8">
 //                 <TripDetailsCard
 //                   departure={{
 //                     place: ride.departure_place,
 //                     date: ride.departure_date,
 //                   }}
-//                   car={
-//                     ride.car?.model?.name
-//                       ? `${ride.car.model.name} (${ride.car.type}, ${ride.car.color})`
-//                       : `${ride.car?.type || ""}, ${ride.car?.color || ""}`
-//                   }
+//                   car={carInfo}
 //                   availableSeats={ride.nb_places_disponible}
 //                 />
 
@@ -250,7 +279,6 @@
 //                   }
 //                 />
 
-//                 {/* Reservation Details */}
 //                 {ride.details && isRideOwner && (
 //                   <div className="space-y-4">
 //                     <h2 className="text-2xl font-bold text-gray-900">
@@ -318,24 +346,8 @@
 //                     </div>
 //                   </div>
 //                 )}
-
-//                 {/* Optionally, pickup points if available in API */}
-//                 {/* <PickupPoints points={ride.pickupPoints || []} /> */}
-
-//                 {/* Description (if you have a description field in API) */}
-//                 {/* <div className="space-y-4">
-//                   <h2 className="text-2xl font-bold text-gray-900">
-//                     Description
-//                   </h2>
-//                   <div className="bg-gray-50 rounded-xl p-6">
-//                     <p className="text-gray-700 leading-relaxed">
-//                       {ride.description}
-//                     </p>
-//                   </div>
-//                 </div> */}
 //               </div>
 
-//               {/* Sidebar */}
 //               <div className="space-y-6">
 //                 <DriverInfoCard
 //                   driver={{
@@ -377,8 +389,6 @@
 //           </div>
 //         </div>
 //       </div>
-
-//       {/* Reservation Modal */}
 //       <ReservationModal
 //         isOpen={isReservationModalOpen}
 //         onClose={() => setIsReservationModalOpen(false)}
@@ -416,6 +426,11 @@ interface RideData {
   price: number;
   nb_places_disponible: number;
   details?: string;
+  // ✅ Coordonnées GPS
+  lat_dep?: number | string | null;
+  lng_dep?: number | string | null;
+  lat_arr?: number | string | null;
+  lng_arr?: number | string | null;
   user?: {
     id?: number;
     first_name?: string;
@@ -477,7 +492,6 @@ export default function RideDetailPage({
   const [error, setError] = useState(false);
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
 
-  // Get current user from Redux store
   const currentUser = useSelector((state: RootState) => state.user.user);
 
   useEffect(() => {
@@ -486,7 +500,7 @@ export default function RideDetailPage({
     api
       .get(`/api/posts/${id}/`)
       .then((res) => {
-        console.log("Ride data:", res.data); // Pour déboguer
+        console.log("Ride data:", res.data);
         setRide(res.data);
         setLoading(false);
       })
@@ -499,7 +513,6 @@ export default function RideDetailPage({
   if (loading) return <div className="p-8 text-center">Loading...</div>;
   if (error || !ride) return notFound();
 
-  // Check if current user is the owner of the ride
   const isRideOwner = !!(currentUser && ride && ride.user?.id === currentUser.id);
 
   const renderStars = (rating: number) => {
@@ -573,7 +586,6 @@ export default function RideDetailPage({
     alert("Contact functionality would be implemented here");
   };
 
-  // ✅ Construire les informations complètes du véhicule
   const getCarInfo = () => {
     if (!ride.car) return null;
 
@@ -594,6 +606,18 @@ export default function RideDetailPage({
   };
 
   const carInfo = getCarInfo();
+
+  // ✅ Convertir les coordonnées en nombres si nécessaire
+  const parseCoordinate = (coord: number | string | null | undefined): number | null => {
+    if (coord == null) return null;
+    const num = typeof coord === 'string' ? parseFloat(coord) : coord;
+    return !Number.isNaN(num) ? num : null;
+  };
+
+  const fromLat = parseCoordinate(ride.lat_dep);
+  const fromLng = parseCoordinate(ride.lng_dep);
+  const toLat = parseCoordinate(ride.lat_arr);
+  const toLng = parseCoordinate(ride.lng_arr);
 
   return (
     <main className="min-h-screen bg-gray-50 py-8">
@@ -662,7 +686,15 @@ export default function RideDetailPage({
                   availableSeats={ride.nb_places_disponible}
                 />
 
-                <RouteMap from={ride.departure_place} to={ride.arrival_place} />
+                {/* ✅ Passer les coordonnées GPS au composant RouteMap */}
+                <RouteMap 
+                  from={ride.departure_place} 
+                  to={ride.arrival_place}
+                  fromLat={fromLat}
+                  fromLng={fromLng}
+                  toLat={toLat}
+                  toLng={toLng}
+                />
 
                 <ServicesDisplay
                   services={
