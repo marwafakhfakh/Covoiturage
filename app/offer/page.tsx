@@ -948,7 +948,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                     )}
                   </div>
 
-                  <div className="space-y-2">
+                  {/* <div className="space-y-2">
                     <label className="block text-sm font-semibold text-gray-700">
                       Sièges disponibles
                     </label>
@@ -978,7 +978,46 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                         </>
                       )}
                     </select>
-                  </div>
+                  </div> */}
+                  <div className="space-y-2">
+  <label className="block text-sm font-semibold text-gray-700">
+    Sièges disponibles
+  </label>
+
+  <select
+    name="nb_places_disponible"
+    value={form.nb_places_disponible}
+    className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent transition bg-white"
+    onChange={handleChange}
+    required
+  >
+    {/* Cas 1 : aucune voiture choisie → message */}
+    {!selectedCar && (
+      <option value="" disabled>
+      Choisir une voiture
+      </option>
+    )}
+
+    {/* Cas 2 : voiture choisie → placeholder + liste dynamique */}
+    {selectedCar && (
+      <>
+        <option value="">
+          Choisir les sièges
+        </option>
+
+        {Array.from(
+          { length: selectedCar.nb_place - 1 },
+          (_, i) => i + 1
+        ).map((num) => (
+          <option key={num} value={num.toString()}>
+            {num} seat{num > 1 ? "s" : ""}
+          </option>
+        ))}
+      </>
+    )}
+  </select>
+</div>
+
                 </div>
               </FormSection>
 

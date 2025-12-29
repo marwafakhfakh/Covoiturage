@@ -426,6 +426,7 @@ interface RideData {
   price: number;
   nb_places_disponible: number;
   details?: string;
+  
   // ✅ Coordonnées GPS
   lat_dep?: number | string | null;
   lng_dep?: number | string | null;
@@ -451,7 +452,7 @@ interface RideData {
     serial_number?: string;
     nb_place?: number;
     year?: number;
-    image?: string;
+    image?: string; 
     model_details?: {
       id?: number;
       name?: string;

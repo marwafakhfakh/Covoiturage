@@ -169,6 +169,7 @@ interface CarInfo {
   color?: string;
   year?: number | string;
   fullName?: string;
+  serial_number?: string;
 }
 
 interface TripDetailsCardProps {
@@ -234,12 +235,12 @@ export default function TripDetailsCard({
                       {car.fullName}
                     </div>
                   )}
-                  
+                 
                   {/* Type et Couleur */}
                   <div className="text-sm text-gray-600">
-                    {car.vehicleType && car.color 
-                      ? `${car.vehicleType} • ${car.color}`
-                      : car.vehicleType || car.color || ""}
+                    {car.serial_number && car.color
+                      ? `${car.serial_number} • ${car.color}`
+                      : car.serial_number || car.color || ""}
                   </div>
                   
                   {/* Année */}
