@@ -595,6 +595,7 @@ export default function RideDetailPage({
     const vehicleType = ride.car.vehicle_type_details?.name || "";
     const color = ride.car.color_details?.name || "";
     const year = ride.car.year || "";
+  const serial_number = ride.car.serial_number || ""; // ✅ AJOUT DU SERIAL_NUMBER
 
     return {
       brand,
@@ -602,6 +603,7 @@ export default function RideDetailPage({
       vehicleType,
       color,
       year,
+      serial_number,
       fullName: brand && model ? `${brand} ${model}` : vehicleType || "Véhicule",
     };
   };

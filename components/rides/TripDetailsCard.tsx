@@ -232,15 +232,15 @@ export default function TripDetailsCard({
                   {/* Marque et Modèle */}
                   {car.fullName && (
                     <div className="text-gray-900 font-medium">
-                      {car.fullName}
+                      {car.fullName} • {car.color}
                     </div>
                   )}
                  
                   {/* Type et Couleur */}
                   <div className="text-sm text-gray-600">
-                    {car.serial_number && car.color
-                      ? `${car.serial_number} • ${car.color}`
-                      : car.serial_number || car.color || ""}
+                    {car.serial_number 
+                      ? `${car.serial_number}`
+                      : car.serial_number }
                   </div>
                   
                   {/* Année */}

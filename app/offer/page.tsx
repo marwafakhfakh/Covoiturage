@@ -691,6 +691,90 @@ export default function OfferRidePage() {
     setPriceManuallyEdited(false);
   }, [form.departure_place, form.arrival_place]);
 
+// const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+//   e.preventDefault();
+//   setError(null);
+
+//   const selectedCar = ownedCars.find(
+//     (car) => car.id === parseInt(form.selected_car_id)
+//   );
+
+//   try {
+//     const postData = {
+//       departure_place: form.departure_place,
+//       arrival_place: form.arrival_place,
+//       departure_date: form.departure_date,
+//       price: form.price,
+//       nb_places_disponible: form.nb_places_disponible,
+//       description: form.description,
+//       user: user?.id,
+//       car_id: selectedCar?.id,
+//       //car: selectedCar?.id,
+//       status: "open",
+//       services_ids: form.services,
+//       // ✅ Envoi des coordonnées séparées (lat et lng)
+//       departure_latitude: preciseDepartureCoords?.lat ?? null,
+//       departure_longitude: preciseDepartureCoords?.lng ?? null,
+//       arrival_latitude: preciseArrivalCoords?.lat ?? null,
+//       arrival_longitude: preciseArrivalCoords?.lng ?? null,
+//     };
+
+//     console.log('📤 Données envoyées:', postData);
+//     console.log('📍 Départ:', { 
+//       lat: postData.departure_latitude, 
+//       lng: postData.departure_longitude 
+//     });
+//     console.log('📍 Arrivée:', { 
+//       lat: postData.arrival_latitude, 
+//       lng: postData.arrival_longitude 
+//     });
+//     // lat_dep: preciseDepartureCoords?.lat ?? null,
+//     //   lng_dep: preciseDepartureCoords?.lng ?? null,
+//     //   lat_arr: preciseArrivalCoords?.lat ?? null,
+//     //   lng_arr: preciseArrivalCoords?.lng ?? null,
+//     // };
+
+//     // console.log('📤 Données envoyées:', postData);
+//     // console.log('📍 Départ:', { 
+//     //   lat: postData.lat_dep, 
+//     //   lng: postData.lng_dep 
+//     // });
+//     // console.log('📍 Arrivée:', { 
+//     //   lat: postData.lat_arr, 
+//     //   lng: postData.lng_arr 
+//     // });
+
+//     await api.post("/api/posts/", postData);
+//     setSuccess(true);
+    
+//     // Réinitialiser le formulaire après succès
+//     setForm({
+//       departure_place: "",
+//       arrival_place: "",
+//       departure_date: getDefaultDateTime(),
+//       price: "",
+//       nb_places_disponible: "",
+//       selected_car_id: "",
+//       services: [],
+//       description: "",
+//     });
+//     setPreciseDepartureCoords(null);
+//     setPreciseArrivalCoords(null);
+    
+//   } catch (err) {
+//     console.error('❌ Error publishing ride:', err);
+//     if (err && typeof err === 'object' && 'response' in err) {
+//       const error = err as { response?: { data?: { detail?: string; [key: string]: unknown } } };
+//       const detail = error.response?.data?.detail;
+//       const allErrors = error.response?.data 
+//         ? Object.values(error.response.data).flat().join(" ")
+//         : "";
+//       setError(detail || allErrors || "An error occurred while publishing your ride.");
+//     } else {
+//       setError("An error occurred while publishing your ride.");
+//     }
+//   }
+// };
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   setError(null);
@@ -709,10 +793,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       description: form.description,
       user: user?.id,
       car_id: selectedCar?.id,
-      //car: selectedCar?.id,
       status: "open",
       services_ids: form.services,
-      // ✅ Envoi des coordonnées séparées (lat et lng)
       departure_latitude: preciseDepartureCoords?.lat ?? null,
       departure_longitude: preciseDepartureCoords?.lng ?? null,
       arrival_latitude: preciseArrivalCoords?.lat ?? null,
@@ -720,29 +802,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     };
 
     console.log('📤 Données envoyées:', postData);
-    console.log('📍 Départ:', { 
-      lat: postData.departure_latitude, 
-      lng: postData.departure_longitude 
-    });
-    console.log('📍 Arrivée:', { 
-      lat: postData.arrival_latitude, 
-      lng: postData.arrival_longitude 
-    });
-    // lat_dep: preciseDepartureCoords?.lat ?? null,
-    //   lng_dep: preciseDepartureCoords?.lng ?? null,
-    //   lat_arr: preciseArrivalCoords?.lat ?? null,
-    //   lng_arr: preciseArrivalCoords?.lng ?? null,
-    // };
-
-    // console.log('📤 Données envoyées:', postData);
-    // console.log('📍 Départ:', { 
-    //   lat: postData.lat_dep, 
-    //   lng: postData.lng_dep 
-    // });
-    // console.log('📍 Arrivée:', { 
-    //   lat: postData.lat_arr, 
-    //   lng: postData.lng_arr 
-    // });
 
     await api.post("/api/posts/", postData);
     setSuccess(true);
@@ -763,15 +822,45 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     
   } catch (err) {
     console.error('❌ Error publishing ride:', err);
+    
     if (err && typeof err === 'object' && 'response' in err) {
-      const error = err as { response?: { data?: { detail?: string; [key: string]: unknown } } };
-      const detail = error.response?.data?.detail;
-      const allErrors = error.response?.data 
-        ? Object.values(error.response.data).flat().join(" ")
-        : "";
-      setError(detail || allErrors || "An error occurred while publishing your ride.");
+      const error = err as { 
+        response?: { 
+          data?: { 
+            detail?: string;
+            non_field_errors?: string[];
+            [key: string]: unknown 
+          } 
+        } 
+      };
+      
+      // ✅ DÉTECTION SPÉCIFIQUE DE L'ERREUR DE CRÉDITS
+      const errorData = error.response?.data;
+      const detail = errorData?.detail;
+      const nonFieldErrors = errorData?.non_field_errors;
+      
+      // Vérifier si c'est l'erreur de crédits insuffisants
+      const isInsufficientCredits = 
+        (detail && typeof detail === 'string' && detail.includes('Insufficient credits')) ||
+        (nonFieldErrors && Array.isArray(nonFieldErrors) && 
+         nonFieldErrors.some(msg => msg.includes('Insufficient credits'))) ||
+        (errorData && JSON.stringify(errorData).includes('Insufficient credits'));
+      
+      if (isInsufficientCredits) {
+        // ✅ Message personnalisé pour crédits insuffisants
+        setError(
+          "⚠️ Vous n'avez pas assez de crédits pour publier ce trajet. " +
+          "Veuillez contacter l'administrateur de la plateforme pour recharger vos crédits."
+        );
+      } else {
+        // Autres erreurs
+        const allErrors = errorData 
+          ? Object.values(errorData).flat().join(" ")
+          : "";
+        setError(detail || allErrors || "Une erreur s'est produite lors de la publication de votre trajet.");
+      }
     } else {
-      setError("An error occurred while publishing your ride.");
+      setError("Une erreur s'est produite lors de la publication de votre trajet.");
     }
   }
 };
