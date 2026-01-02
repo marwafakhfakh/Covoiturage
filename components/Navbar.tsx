@@ -23,8 +23,8 @@ export default function Navbar() {
           </Link>
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {/* <Link
-              href="/rides"
+            <Link
+              href="/trajets"
               className="text-gray-700 hover:text-black transition font-medium px-3 py-2 rounded-lg hover:bg-gray-100 flex items-center"
             >
               <svg
@@ -41,7 +41,7 @@ export default function Navbar() {
                 />
               </svg>
               Trouver un trajet
-            </Link> */}
+            </Link>
             {/* <Link
               href="/offer"
               className="text-gray-700 hover:text-black transition font-medium px-3 py-2 rounded-lg hover:bg-gray-100 flex items-center"

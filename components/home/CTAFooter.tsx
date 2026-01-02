@@ -29,7 +29,7 @@ export default function CTAFooter({
         <h3 className="text-2xl font-bold mb-4 text-black">{title}</h3>
         <p className="text-gray-600 mb-8 max-w-2xl mx-auto">{description}</p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
+          {/* <Link
             href={primaryButtonHref}
             className="px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition font-semibold"
           >
@@ -40,7 +40,7 @@ export default function CTAFooter({
             className="px-8 py-3 border-2 border-black text-black rounded-lg hover:bg-black hover:text-white transition font-semibold"
           >
             {secondaryButtonText}
-          </Link>
+          </Link> */}
         </div>
       </div>
     </footer>

@@ -759,16 +759,38 @@ export default function ProfilePage() {
     }
   };
 
-  const handleCancelOfferedRide = async (tripId: number) => {
-    try {
-      await api.put(`/api/posts/${tripId}/`, { status: "canceled" });
-      setOfferedRides((prev) =>
-        prev.map((r) => (r.id === tripId ? { ...r, status: "canceled" } : r))
-      );
-    } catch (err) {
-      console.error("Failed to cancel offered ride", err);
+const handleCancelOfferedRide = async (tripId: number) => {
+  try {
+    const token = localStorage.getItem("token");
+    
+    // ✅ Utiliser DELETE au lieu de PUT
+    const response = await api.delete(`/api/posts/${tripId}/`, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
+
+    // ✅ Vérifier le statut de la réponse
+    if (response.status === 204 || response.status === 200) {
+      // Retirer le trajet supprimé de la liste affichée
+      setOfferedRides((prev) => prev.filter((ride) => ride.id !== tripId));
+      console.log("Trajet supprimé avec succès");
     }
-  };
+  } catch (error: any) {
+    console.error("Erreur lors de la suppression du trajet:", error);
+    
+    // Gestion des différents types d'erreurs
+    if (error.response?.status === 403) {
+      alert("Vous n'êtes pas autorisé à supprimer ce trajet");
+    } else if (error.response?.status === 404) {
+      alert("Trajet non trouvé");
+    } else {
+      alert("Erreur lors de la suppression du trajet. Veuillez réessayer.");
+    }
+    
+    throw error; // Pour que le composant TripsSection puisse gérer l'état de chargement
+  }
+};
 
 
   const handleEditOfferedRide = (tripId: number) => {
