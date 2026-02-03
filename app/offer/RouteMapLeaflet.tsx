@@ -721,6 +721,8 @@ export default function RouteMapLeaflet({
   const [routeCoordinates, setRouteCoordinates] = useState<[number, number][]>([]);
   const [routeDistance, setRouteDistance] = useState<number>(0);
   const [loadingRoute, setLoadingRoute] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState<{lat:number,lng:number}|null>(null);
+
 
   const hasBoth =
     fromLat !== null &&
@@ -816,7 +818,18 @@ export default function RouteMapLeaflet({
             attribution='&copy; OpenStreetMap contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-
+{currentLocation && (
+  <Marker
+    position={[currentLocation.lat, currentLocation.lng]}
+    icon={L.icon({
+      iconUrl: "/icons/current-location.png", // icône cible
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+    })}
+  >
+    <Popup>Vous êtes ici</Popup>
+  </Marker>
+)}
           {fromLat !== null && fromLng !== null && !Number.isNaN(fromLat) && !Number.isNaN(fromLng) && (
             <Marker position={[fromLat, fromLng]}>
               <Popup>
