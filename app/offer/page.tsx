@@ -416,13 +416,25 @@ setPreciseArrivalCoords(null);
                     }}
                   />
 
-                  <SingleLocationMap
-                    delegations={delegations}
-                    selectedLocation={form.arrival_place || null}
-                    preciseCoords={preciseArrivalCoords}
-                    label="🎯 Arrivée"
-                    markerColor="arrival"
-                  />
+<SingleLocationMap
+  delegations={delegations}
+  selectedLocation={form.arrival_place || null}
+  preciseCoords={preciseArrivalCoords}
+  label="🎯 Arrivée"
+  markerColor="arrival"
+  onUpdateFormField={(value, lat, lng) => {
+    // 🔴 LA CARTE PREND LE DESSUS SUR LE TEXTE
+    setForm(prev => ({
+      ...prev,
+      arrival_place:`📍 ${lat.toFixed(4)}, ${lng.toFixed(4)}`
+
+    }));
+    setPreciseArrivalCoords({ lat, lng });
+  }}
+/>
+
+
+
                 </div>
               </FormSection>
           {/* Section Véhicule */}

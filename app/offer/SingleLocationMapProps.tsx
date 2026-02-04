@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+  useMapEvents,
+} from "react-leaflet";
 import type { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -15,11 +22,10 @@ export type SingleLocationMapProps = {
   label: string;
   markerColor: "departure" | "arrival";
   preciseCoords?: { lat: number; lng: number } | null;
-  onPreciseLocationSelect?: (lat: number, lng: number) => void;
-  onUpdateFormField?: (value: string, lat: number, lng: number) => void; // seulement carte Départ
+  onUpdateFormField?: (value: string, lat: number, lng: number) => void;
 };
 
-// 🔹 Composant interne pour centrer la carte
+// 🔹 Centre la carte dynamiquement
 function MapUpdater({ center }: { center: LatLngExpression }) {
   const map = useMap();
 
@@ -30,12 +36,30 @@ function MapUpdater({ center }: { center: LatLngExpression }) {
   return null;
 }
 
-// 🔹 Bouton pour géolocalisation (📍) — seulement si prop `onUpdateFormField` est fournie
-type LocateMeButtonProps = {
-  onUpdate: (value: string, lat: number, lng: number) => void;
-};
+// 🔹 Gestion clic sur la carte
+function MapClickHandler({
+  onSelect,
+}: {
+  onSelect?: (value: string, lat: number, lng: number) => void;
+}) {
+  useMapEvents({
+    click(e) {
+      if (!onSelect) return;
 
-function LocateMeButton({ onUpdate }: LocateMeButtonProps) {
+      const { lat, lng } = e.latlng;
+      onSelect(`${lat.toFixed(5)}, ${lng.toFixed(5)}`, lat, lng);
+    },
+  });
+
+  return null;
+}
+
+// 🔹 Bouton 📍 géolocalisation (optionnel)
+function LocateMeButton({
+  onUpdate,
+}: {
+  onUpdate: (value: string, lat: number, lng: number) => void;
+}) {
   const map = useMap();
 
   useEffect(() => {
@@ -44,30 +68,23 @@ function LocateMeButton({ onUpdate }: LocateMeButtonProps) {
     locateControl.onAdd = () => {
       const button = L.DomUtil.create(
         "button",
-        "leaflet-bar leaflet-control leaflet-control-custom"
+        "leaflet-bar leaflet-control"
       );
       button.innerHTML = "📍";
-      button.title = "Ma position actuelle";
       button.style.width = "40px";
       button.style.height = "40px";
       button.style.fontSize = "20px";
+      button.style.background = "white";
       button.style.cursor = "pointer";
-      button.style.backgroundColor = "white";
       button.style.border = "none";
 
       L.DomEvent.on(button, "click", (e) => {
         L.DomEvent.stopPropagation(e);
 
-        if (!navigator.geolocation) {
-          alert("Géolocalisation non supportée");
-          return;
-        }
-
         navigator.geolocation.getCurrentPosition(
           (pos) => {
             const lat = pos.coords.latitude;
             const lng = pos.coords.longitude;
-
             map.setView([lat, lng], 15, { animate: true });
             onUpdate("Ma position actuelle", lat, lng);
           },
@@ -80,10 +97,7 @@ function LocateMeButton({ onUpdate }: LocateMeButtonProps) {
     };
 
     locateControl.addTo(map);
-
-    return () => {
-      locateControl.remove();
-    };
+    return () => locateControl.remove();
   }, [map, onUpdate]);
 
   return null;
@@ -96,53 +110,60 @@ export default function SingleLocationMap({
   label,
   markerColor,
   preciseCoords,
-  onPreciseLocationSelect,
   onUpdateFormField,
 }: SingleLocationMapProps) {
   const defaultCenter: LatLngExpression = [36.8065, 10.1815];
   const [center, setCenter] = useState<LatLngExpression>(defaultCenter);
-  const [markerPosition, setMarkerPosition] = useState<LatLngExpression | null>(null);
+  const [markerPosition, setMarkerPosition] =
+    useState<LatLngExpression | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // 🔄 Synchronisation position
   useEffect(() => {
     setError(null);
-
+  
+    // ✅ PRIORITÉ À LA MAP
     if (preciseCoords) {
       const pos: LatLngExpression = [preciseCoords.lat, preciseCoords.lng];
       setCenter(pos);
       setMarkerPosition(pos);
       return;
     }
-
+  
     if (!selectedLocation) {
       setMarkerPosition(null);
       return;
     }
-
+  
+    // ✅ Si c'est "lat, lng" → PAS d'erreur
+    if (selectedLocation.includes(",")) {
+      return;
+    }
+  
     const found = delegations.find(
       (d) => d.name.toLowerCase() === selectedLocation.toLowerCase()
     );
-
+  
     if (!found) {
       setError("⚠️ Coordonnées invalides");
       setMarkerPosition(null);
       return;
     }
-
+  
     const lat = parseFloat(found.latitude);
     const lng = parseFloat(found.longitude);
-
+  
     if (isNaN(lat) || isNaN(lng)) {
       setError("⚠️ Coordonnées invalides");
       setMarkerPosition(null);
       return;
     }
-
+  
     const pos: LatLngExpression = [lat, lng];
     setCenter(pos);
     setMarkerPosition(pos);
   }, [selectedLocation, preciseCoords, delegations]);
-
+  
   return (
     <div className="space-y-2">
       <h3 className="font-semibold text-gray-800">{label}</h3>
@@ -166,13 +187,36 @@ export default function SingleLocationMap({
           attribution="&copy; OpenStreetMap contributors"
         />
 
-        {/* Affiche le bouton 📍 seulement si prop onUpdateFormField existe */}
+        {/* 📍 Bouton GPS */}
         {onUpdateFormField && <LocateMeButton onUpdate={onUpdateFormField} />}
 
+        {/* 🖱️ Clic sur la carte */}
+        {onUpdateFormField && (
+          <MapClickHandler onSelect={onUpdateFormField} />
+        )}
+
+        {/* 📍 Marker draggable */}
         {markerPosition && (
-          <Marker position={markerPosition}>
+          <Marker
+            position={markerPosition}
+            draggable={!!onUpdateFormField}
+            eventHandlers={{
+              dragend: (e) => {
+                if (!onUpdateFormField) return;
+
+                const { lat, lng } = e.target.getLatLng();
+                onUpdateFormField(
+                  `${lat.toFixed(5)}, ${lng.toFixed(5)}`,
+                  lat,
+                  lng
+                );
+              },
+            }}
+          >
             <Popup>
-              {markerColor === "departure" ? "Lieu de départ" : "Lieu d'arrivée"}
+              {markerColor === "departure"
+                ? "Lieu de départ"
+                : "Lieu d'arrivée"}
             </Popup>
           </Marker>
         )}
