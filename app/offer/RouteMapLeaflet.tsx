@@ -699,6 +699,8 @@ interface Props {
   onDistanceCalculated?: (distance: number, suggestedPrice: number) => void;
   preciseDepartureCoords?: {lat: number, lng: number} | null;
   preciseArrivalCoords?: {lat: number, lng: number} | null;
+  roundTrip?: boolean;         // <-- nouveau
+  returnDate?: string;         // <-- nouveau
 }
 
 export default function RouteMapLeaflet({

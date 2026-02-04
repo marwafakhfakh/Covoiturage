@@ -45,11 +45,15 @@ type OfferForm = {
   departure_place: string;
   arrival_place: string;
   departure_date: string;
+  return_date?: string;
   price: string;
   nb_places_disponible: string;
   selected_car_id: string;
   services: number[];
   description: string;
+  round_trip: boolean;
+  return_price: string;
+  return_nb_places_disponible: string;
 };
 
 export default function OfferRidePage() {
@@ -70,8 +74,11 @@ export default function OfferRidePage() {
     selected_car_id: "",
     services: [],
     description: "",
+    round_trip: false,
+    return_date: "",
+    return_price: "",
+    return_nb_places_disponible: "",
   });
-
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ownedCars, setOwnedCars] = useState<Car[]>([]);
@@ -91,6 +98,7 @@ export default function OfferRidePage() {
   // 📡 GPS
   const [geoLoading, setGeoLoading] = useState(false);
   const [useCurrentLocation, setUseCurrentLocation] = useState(false);
+  const [returnPriceManuallyEdited, setReturnPriceManuallyEdited] = useState(false);
 
   // 🔹 Fetch data
   useEffect(() => {
@@ -128,11 +136,20 @@ export default function OfferRidePage() {
 
   // 🔹 Form change
   const handleChange = (e: React.ChangeEvent<any>) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+  
     if (name === "price") setPriceManuallyEdited(true);
-    setForm((prev) => ({ ...prev, [name]: value }));
+    if (name === "return_price") setReturnPriceManuallyEdited(true);
+  
+    if (type === "checkbox") {
+      setForm((prev) => ({ ...prev, [name]: checked }));
+    } else {
+      setForm((prev) => ({ ...prev, [name]: value }));
+    }
+  
     if (name === "departure_place") setUseCurrentLocation(false);
   };
+  
 
   // 📌 Gestion des services cochés/décochés
   const handleServiceChange = (serviceId: number) => {
@@ -175,11 +192,163 @@ export default function OfferRidePage() {
   // 💰 Prix auto
   const handleDistanceCalculated = (_: number, suggestedPrice: number) => {
     if (priceManuallyEdited) return;
-    const price = suggestedPrice.toFixed(1);
-    if (price === lastSuggestedPrice) return;
-    setLastSuggestedPrice(price);
-    setForm((p) => ({ ...p, price }));
+    let price = suggestedPrice;
+    const newPrice = suggestedPrice.toFixed(1);
+
+    if (lastSuggestedPrice === newPrice) return;
+
+    setLastSuggestedPrice(newPrice);
+    setForm(prev => ({ 
+      ...prev, 
+      price: newPrice,
+      return_price: prev.round_trip && !setPriceManuallyEdited ? newPrice : prev.return_price
+    }));
   };
+
+  useEffect(() => {
+    setPriceManuallyEdited(false);
+    setPriceManuallyEdited(false);
+  }, [form.departure_place, form.arrival_place]);
+
+useEffect(() => {
+  if (form.departure_date) {
+    const departureDate = new Date(form.departure_date);
+    departureDate.setHours(departureDate.getHours() + 6);
+    const returnDateTime = departureDate.toISOString().slice(0, 16);
+    
+    setForm(prev => ({
+      ...prev,
+      return_date: returnDateTime
+    }));
+  }
+}, [form.departure_date]);
+const handleRoundTripChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const checked = e.target.checked;
+  setForm((prev) => ({ 
+    ...prev, 
+    round_trip: checked,
+    // Si on active le round trip et qu'il n'y a pas de prix retour, copier le prix aller
+    return_price: checked && !prev.return_price ? prev.price : prev.return_price,
+    // Copier aussi le nombre de places disponibles
+    return_nb_places_disponible: checked && !prev.return_nb_places_disponible ? prev.nb_places_disponible : prev.return_nb_places_disponible,
+  }));
+};
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  setError(null);
+
+  const selectedCar = ownedCars.find(
+    (car) => car.id === parseInt(form.selected_car_id)
+  );
+
+  try {
+    // Données du trajet aller
+    const postData = {
+      departure_place: form.departure_place,
+      arrival_place: form.arrival_place,
+      departure_date: form.departure_date,
+      price: form.price,
+      nb_places_disponible: form.nb_places_disponible,
+      description: form.description,
+      user: user?.id,
+      car_id: selectedCar?.id,
+      status: "open",
+      services_ids: form.services,
+      departure_latitude: preciseDepartureCoords?.lat ?? null,
+      departure_longitude: preciseDepartureCoords?.lng ?? null,
+      arrival_latitude: preciseArrivalCoords?.lat ?? null,
+      arrival_longitude: preciseArrivalCoords?.lng ?? null,
+      round_trip: false, // Le trajet aller n'est pas un round trip
+    };
+
+    console.log('📤 Données trajet aller:', postData);
+     // Créer le trajet aller
+     await api.post("/api/posts/", postData);
+
+     // Si round_trip est activé, créer le trajet retour
+     if (form.round_trip) {
+       const returnPostData = {
+         departure_place: form.arrival_place, // ✅ Inversé
+         arrival_place: form.departure_place, // ✅ Inversé
+         departure_date: form.return_date,
+         price: form.return_price || form.price, // Utiliser le prix retour ou le prix aller
+         nb_places_disponible: form.return_nb_places_disponible || form.nb_places_disponible,
+         description: form.description,
+         user: user?.id,
+         car_id: selectedCar?.id,
+         status: "open",
+         services_ids: form.services,
+         departure_latitude: preciseArrivalCoords?.lat ?? null, // ✅ Inversé
+         departure_longitude: preciseArrivalCoords?.lng ?? null, // ✅ Inversé
+         arrival_latitude: preciseDepartureCoords?.lat ?? null, // ✅ Inversé
+         arrival_longitude: preciseDepartureCoords?.lng ?? null, // ✅ Inversé
+         round_trip: false,
+       };
+
+       console.log('📤 Données trajet retour:', returnPostData);
+  // Créer le trajet retour
+  await api.post("/api/posts/", returnPostData);
+}
+
+setSuccess(true);
+
+// Réinitialiser le formulaire après succès
+setForm({
+  departure_place: "",
+  arrival_place: "",
+  departure_date: getDefaultDateTime(),
+  price: "",
+  nb_places_disponible: "",
+  selected_car_id: "",
+  services: [],
+  description: "",
+  round_trip: false,
+  return_date:"",
+  return_price: "",
+  return_nb_places_disponible: "",
+});
+setPreciseDepartureCoords(null);
+setPreciseArrivalCoords(null);
+} catch (err) {
+  console.error('❌ Error publishing ride:', err);
+  
+  if (err && typeof err === 'object' && 'response' in err) {
+    const error = err as { 
+      response?: { 
+        data?: { 
+          detail?: string;
+          non_field_errors?: string[];
+          [key: string]: unknown 
+        } 
+      } 
+    };
+    
+    const errorData = error.response?.data;
+    const detail = errorData?.detail;
+    const nonFieldErrors = errorData?.non_field_errors;
+    
+    const isInsufficientCredits = 
+      (detail && typeof detail === 'string' && detail.includes('Insufficient credits')) ||
+      (nonFieldErrors && Array.isArray(nonFieldErrors) && 
+       nonFieldErrors.some(msg => msg.includes('Insufficient credits'))) ||
+      (errorData && JSON.stringify(errorData).includes('Insufficient credits'));
+    
+    if (isInsufficientCredits) {
+      setError(
+        "⚠️ Vous n'avez pas assez de crédits pour publier ce trajet. " +
+        "Veuillez contacter l'administrateur de la plateforme pour recharger vos crédits."
+      );
+    } else {
+      const allErrors = errorData 
+        ? Object.values(errorData).flat().join(" ")
+        : "";
+      setError(detail || allErrors || "Une erreur s'est produite lors de la publication de votre trajet.");
+    }
+  } else {
+    setError("Une erreur s'est produite lors de la publication de votre trajet.");
+  }
+}
+};
 
   const selectedCar = ownedCars.find(
     (c) => c.id === parseInt(form.selected_car_id)
@@ -210,6 +379,7 @@ export default function OfferRidePage() {
             <div className="text-center py-12">Chargement…</div>
           ) : (
             <form className="space-y-8">
+              {/* Section Route */}
               <FormSection title="Route Information">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <LocationAutocomplete
@@ -233,7 +403,6 @@ export default function OfferRidePage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                  {/* Carte Départ avec bouton 📍 */}
                   <SingleLocationMap
                     delegations={delegations}
                     selectedLocation={useCurrentLocation ? null : form.departure_place}
@@ -247,7 +416,6 @@ export default function OfferRidePage() {
                     }}
                   />
 
-                  {/* Carte Arrivée */}
                   <SingleLocationMap
                     delegations={delegations}
                     selectedLocation={form.arrival_place || null}
@@ -256,23 +424,57 @@ export default function OfferRidePage() {
                     markerColor="arrival"
                   />
                 </div>
+              </FormSection>
+          {/* Section Véhicule */}
+          <FormSection title="Vehicle Information">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-gray-700">
+                      Choisir votre voiture
+                    </label>
+                    <select
+                      name="selected_car_id"
+                      value={form.selected_car_id}
+                      className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent transition bg-white"
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="">Choisir une voiture depuis votre collection</option>
+                      {ownedCars.map((car) => (
+                        <option key={car.id} value={car.id.toString()}>
+                          {car.model_details?.brand.name || "Voiture"} {car.model_details?.name} ({car.year || "-"}) - {car.color_details?.name} - {car.serial_number}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-                <RouteMapLeaflet
-                  delegations={delegations}
-                  departureName={form.departure_place}
-                  arrivalName={form.arrival_place}
-                  preciseDepartureCoords={preciseDepartureCoords}
-                  preciseArrivalCoords={preciseArrivalCoords}
-                  onDistanceCalculated={handleDistanceCalculated}
-                />
+                  {ownedCars.length === 0 && (
+                    <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 text-center">
+                      <div className="text-gray-400 text-4xl mb-3">🚗</div>
+                      <h3 className="font-semibold text-gray-900 mb-2">
+                        Aucune voiture disponible
+                      </h3>
+                      <p className="text-gray-600 mb-4">
+                        Vous devez ajouter un véhicule à votre compte avant de proposer des trajets.
+                      </p>
+                      <button
+                        type="button"
+                        className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition font-medium"
+                        onClick={() => (window.location.href = "/profile")}
+                      >
+                        Ajouter un véhicule
+                      </button>
+                    </div>
+                  )}
+                </div>
               </FormSection>
 
-              {/* Trip Details Section */}
+              {/* Section Planning */}
               <FormSection title="Planning et Disponibilité">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="space-y-2">
                     <label className="block text-sm font-semibold text-gray-700">
-                      Date & Time
+                      Date & Heure départ
                     </label>
                     <input
                       name="departure_date"
@@ -302,11 +504,12 @@ export default function OfferRidePage() {
                       onChange={handleChange}
                       required
                     />
-                    {priceManuallyEdited && (
-                      <p className="text-xs text-gray-500 mt-1">
-                        Prix modifié manuellement
-                      </p>
-                    )}
+                              {priceManuallyEdited && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      Prix modifié manuellement
+                    </p>
+                  )}
+
                   </div>
 
                   <div className="space-y-2">
@@ -334,56 +537,121 @@ export default function OfferRidePage() {
                     </select>
                   </div>
                 </div>
-              </FormSection>
 
-              {/* Car Selection Section */}
-              <FormSection title="Vehicle Information">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-gray-700">
-                      Choisir votre voiture
-                    </label>
-                    <select
-                      name="selected_car_id"
-                      value={form.selected_car_id}
-                      className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent transition bg-white"
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value="">
-                        Choisir une voiture depuis votre collection
-                      </option>
-                      {ownedCars.map((car) => (
-                        <option key={car.id} value={car.id.toString()}>
-                          {car.model_details?.brand.name || "Voiture"} {car.model_details?.name} ({car.year || "-"}){" - "}
-                          {car.color_details?.name} - {car.serial_number}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {ownedCars.length === 0 && (
-                    <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 text-center">
-                      <div className="text-gray-400 text-4xl mb-3">🚗</div>
-                      <h3 className="font-semibold text-gray-900 mb-2">
-                        Aucune voiture disponible
-                      </h3>
-                      <p className="text-gray-600 mb-4">
-                        Vous devez ajouter un véhicule à votre compte avant de proposer des trajets.
-                      </p>
-                      <button
-                        type="button"
-                        className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition font-medium"
-                        onClick={() => (window.location.href = "/profile")}
-                      >
-                        Ajouter un véhicule
-                      </button>
-                    </div>
-                  )}
+          {/* Checkbox Round Trip */}
+          <div className="flex items-center space-x-3 p-4 bg-blue-50 border border-blue-200 rounded-xl mt-6">
+                  <input
+                    type="checkbox"
+                    id="round_trip"
+                    checked={form.round_trip}
+                    onChange={handleRoundTripChange}
+                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  />
+                  <label htmlFor="round_trip" className="flex items-center cursor-pointer">
+                    <span className="text-sm font-semibold text-gray-700">
+                      🔄 Trajet aller-retour
+                    </span>
+                    <span className="ml-2 text-xs text-gray-500">
+                      (Créer automatiquement le trajet retour)
+                    </span>
+                  </label>
                 </div>
               </FormSection>
 
-              {/* Services Section */}
+    {/* Section Trajet Retour - Affichée conditionnellement */}
+    {form.round_trip && (
+                <FormSection title="Planning et Disponibilité - Trajet Retour">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <label className="block text-sm font-semibold text-gray-700">
+                        Date & Heure de Retour
+                      </label>
+                      <input
+                        name="return_date"
+                        type="datetime-local"
+                        value={form.return_date}
+                        className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-white"
+                        onChange={handleChange}
+                        required={form.round_trip}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="block text-sm font-semibold text-gray-700">
+                        Prix du siège retour (TND)
+                        {/* {!returnPriceManuallyEdited && form.return_price && (
+                          <span className="ml-2 text-xs text-green-600">✨ Auto-calculé</span>
+                        )} */}
+                      </label>
+                      <input
+                        name="return_price"
+                        placeholder="Prix calculé automatiquement"
+                        type="number"
+                        min="1"
+                        step="0.5"
+                        value={form.return_price}
+                        className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-white"
+                        onChange={handleChange}
+                        required={form.round_trip}
+                      />
+                      {returnPriceManuallyEdited && (
+                        <p className="text-xs text-gray-500 mt-1">
+                          Prix modifié manuellement
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="block text-sm font-semibold text-gray-700">
+                        Sièges disponibles retour
+                      </label>
+                      <select
+                        name="return_nb_places_disponible"
+                        value={form.return_nb_places_disponible}
+                        className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-white"
+                        onChange={handleChange}
+                        required={form.round_trip}
+                      >
+                        {!selectedCar && (
+                          <option value="" disabled>
+                            Choisir une voiture
+                          </option>
+                        )}
+
+                        {selectedCar && (
+                          <>
+                            <option value="">
+                              Choisir les sièges
+                            </option>
+
+                            {Array.from(
+                              { length: selectedCar.nb_place - 1 },
+                              (_, i) => i + 1
+                            ).map((num) => (
+                              <option key={num} value={num.toString()}>
+                                {num} seat{num > 1 ? "s" : ""}
+                              </option>
+                            ))}
+                          </>
+                        )}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-xl">
+                    <p className="text-sm text-gray-700">
+                      <span className="font-semibold">📍 Trajet retour :</span> {form.arrival_place || "..."} → {form.departure_place || "..."}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Le trajet retour utilisera les mêmes services.
+                    </p>
+                  </div>
+                </FormSection>
+              )}
+
+
+    
+              {/* Section Services */}
               <FormSection title="Services & accessoires">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {services.map((service) => (
@@ -400,7 +668,7 @@ export default function OfferRidePage() {
                 </div>
               </FormSection>
 
-              {/* Description Section */}
+              {/* Section Description */}
               <FormSection title="Information supplémentaire">
                 <div className="space-y-2">
                   <label className="block text-sm font-semibold text-gray-700">
@@ -415,6 +683,20 @@ export default function OfferRidePage() {
                     onChange={handleChange}
                   />
                 </div>
+              </FormSection>
+
+              {/* Section Carte Aller */}
+              <FormSection title="Résumé du trajet">               
+                <RouteMapLeaflet 
+                  delegations={delegations}
+                  departureName={form.departure_place}
+                  arrivalName={form.arrival_place}
+                  onDistanceCalculated={handleDistanceCalculated}
+                  preciseDepartureCoords={preciseDepartureCoords}
+                  preciseArrivalCoords={preciseArrivalCoords}
+                  roundTrip={form.round_trip}
+                  returnDate={form.return_date}
+                />
               </FormSection>
 
               <button
