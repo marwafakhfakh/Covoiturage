@@ -77,6 +77,10 @@ function LocateMeButton({
       button.style.background = "white";
       button.style.cursor = "pointer";
       button.style.border = "none";
+      button.title = "Position actuelle";
+
+      button.setAttribute("aria-label", "Position actuelle");
+
 
       L.DomEvent.on(button, "click", (e) => {
         L.DomEvent.stopPropagation(e);
